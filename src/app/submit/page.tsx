@@ -13,7 +13,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { HelpCircle } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { FormEventHandler, useEffect, useRef, useState } from 'react'
 
 export default function SubmitYourStress() {
   const [stressInput, setStressInput] = useState('')
@@ -37,22 +37,20 @@ export default function SubmitYourStress() {
     }
   }, [stressInput])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault()
     const submittedName = isAnonymous ? 'Anonymous' : nameInput
-
-    // Insert data into Supabase
-    const { error } = await supabase
+    supabase
       .from('stress_submissions')
       .insert([{ stress: stressInput, name: submittedName }])
-
-    if (error) {
-      console.error('Error inserting data:', error)
-    } else {
-      // Redirect to Loading page
-      router.push('/loading')
-    }
+      .then(({ error }) => {
+        if (error) {
+          console.error('Error inserting data:', error)
+        } else {
+          // Redirect to Loading page
+          router.push('/loading')
+        }
+      })
   }
 
   return (
@@ -69,7 +67,7 @@ export default function SubmitYourStress() {
       </div>
 
       <div className="flex w-full flex-col items-center justify-center pb-10 pl-6 pr-6 md:w-1/2 lg:p-[5%]">
-        <form onSubmit={void handleSubmit} className="flex w-full flex-col">
+        <form onSubmit={handleSubmit} className="flex w-full flex-col">
           <textarea
             ref={textareaRef}
             className="block max-h-[256px] min-h-[128px] w-full resize-none overflow-y-auto text-wrap rounded-2xl bg-light-blue p-5 font-mono text-xs text-oren-1"
