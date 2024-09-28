@@ -1,5 +1,3 @@
-'use client'
-
 import Parallax from './components/Parallax'
 import Trashcan from './components/Trashcan'
 

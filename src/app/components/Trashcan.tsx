@@ -1,12 +1,12 @@
 'use client'
 
+import arrow from '@/images/Arrow 1.png'
+import bin from '@/images/bin.png' // For page navigation in Next.js
+import paper from '@/images/paper.png'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation' // For page navigation in Next.js
+import { useRouter } from 'next/navigation'
 import React, { useRef } from 'react'
 import Draggable from 'react-draggable'
-import arrow from '../../../public/Arrow 1.png'
-import bin from '../../../public/bin.png'
-import paper from '../../../public/paper.png'
 
 const Trashcan: React.FC = () => {
   const router = useRouter() // Next.js router

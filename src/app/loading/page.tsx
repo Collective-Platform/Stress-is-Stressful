@@ -1,9 +1,9 @@
 'use client'
 
+import truck from '@/images/truck.gif'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import truck from '../../../public/truck.gif'
 
 export default function Loading() {
   const router = useRouter()
