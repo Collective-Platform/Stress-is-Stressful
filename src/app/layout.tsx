@@ -1,29 +1,28 @@
-import type { Metadata } from "next";
-import { Inter, Press_Start_2P, Montserrat } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next'
+import { cn } from '@/lib/utils'
+import { Press_Start_2P } from 'next/font/google'
+import './globals.css'
 
-const pressstart2p = Press_Start_2P ({
+const pressstart2p = Press_Start_2P({
   subsets: ['latin'],
   weight: '400',
-});
-
-const montserrat = Montserrat({ subsets: ["latin"] });
-
-const inter = Inter({ subsets: ["latin"] });
+})
 
 export const metadata: Metadata = {
-  title: "Strictly Students",
-  description: "For the lost",
-};
+  title: 'Strictly Students',
+  description: 'For the lost',
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={pressstart2p.className}>{children}</body>
+    <html lang="en" className="h-full">
+      <body className={cn(pressstart2p.className, 'flex min-h-full flex-col')}>
+        {children}
+      </body>
     </html>
-  );
+  )
 }
