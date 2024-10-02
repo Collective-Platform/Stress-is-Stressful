@@ -9,16 +9,18 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import room from '@/images/room.gif'
-import { supabase } from '@/lib/supabaseClient'
+import truck from '@/images/truck.gif'
 import { HelpCircle } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { FormEventHandler, useEffect, useRef, useState } from 'react'
+import { submitStress } from './actions'
 
 export default function SubmitYourStress() {
   const [stressInput, setStressInput] = useState('')
   const [nameInput, setNameInput] = useState('')
   const [isAnonymous, setIsAnonymous] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -39,18 +41,35 @@ export default function SubmitYourStress() {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
+    setIsLoading(true)
     const submittedName = isAnonymous ? 'Anonymous' : nameInput
-    supabase
-      .from('stress_submissions')
-      .insert([{ stress: stressInput, name: submittedName }])
-      .then(({ error }) => {
-        if (error) {
-          console.error('Error inserting data:', error)
-        } else {
-          // Redirect to Loading page
-          router.push('/loading')
-        }
+
+    submitStress(stressInput, submittedName)
+      .then(() => new Promise((resolve) => setTimeout(resolve, 3000)))
+      .then(() => { router.push('/content'); })
+      .catch((error: unknown) => {
+        console.error('Error submitting stress:', error)
+        setIsLoading(false)
       })
+  }
+
+  if (isLoading) {
+    return (
+      <main className="h-screen bg-gradient-to-br from-dark-blue to-light-blue">
+        <div className="flex flex-col items-center py-[40vh] align-middle">
+          <div className="align-middle">
+            <Image
+              src={truck}
+              alt={'truck'}
+              className="w-[200px] lg:w-[300px] 2xl:w-[20vw]"
+            />
+          </div>
+          <h3 className="m-5 text-center text-xs text-orange-200 lg:text-sm 2xl:text-2xl">
+            We&apos;re tossing the stress out for you...
+          </h3>
+        </div>
+      </main>
+    )
   }
 
   return (
