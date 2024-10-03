@@ -12,8 +12,13 @@ import room from '@/images/room.gif'
 import truck from '@/images/truck.gif'
 import { HelpCircle } from 'lucide-react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { FormEventHandler, useEffect, useRef, useState } from 'react'
+import {
+  FormEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { submitStress } from './actions'
 
 export default function SubmitYourStress() {
@@ -21,7 +26,6 @@ export default function SubmitYourStress() {
   const [nameInput, setNameInput] = useState('')
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
@@ -39,18 +43,24 @@ export default function SubmitYourStress() {
     }
   }, [stressInput])
 
+  const submitStressAsync = useCallback(async () => {
+    const submittedName = isAnonymous ? 'Anonymous' : nameInput
+    try {
+      await Promise.all([
+        submitStress(stressInput, submittedName),
+        new Promise((resolve) => setTimeout(resolve, 3000)),
+      ])
+    } catch (error) {
+      console.error('Error submitting stress:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [isAnonymous, nameInput, stressInput])
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
     setIsLoading(true)
-    const submittedName = isAnonymous ? 'Anonymous' : nameInput
-
-    submitStress(stressInput, submittedName)
-      .then(() => new Promise((resolve) => setTimeout(resolve, 3000)))
-      .then(() => { router.push('/content'); })
-      .catch((error: unknown) => {
-        console.error('Error submitting stress:', error)
-        setIsLoading(false)
-      })
+    void submitStressAsync()
   }
 
   if (isLoading) {
