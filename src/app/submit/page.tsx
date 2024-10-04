@@ -22,45 +22,79 @@ import {
 import { submitStress } from './actions'
 
 export default function SubmitYourStress() {
-  const [stressInput, setStressInput] = useState('')
-  const [nameInput, setNameInput] = useState('')
-  const [isAnonymous, setIsAnonymous] = useState(false)
+  const [formData, setFormData] = useState({
+    stressInput: '',
+    nameInput: '',
+    isAnonymous: false,
+  })
   const [isLoading, setIsLoading] = useState(false)
+  const [errors, setErrors] = useState({
+    stressInput: false,
+    nameInput: false,
+  })
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  useEffect(() => {
-    if (isAnonymous) {
-      setNameInput('Anonymous')
-    } else {
-      setNameInput('')
-    }
-  }, [isAnonymous])
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }))
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: false,
+      }))
+    },
+    [],
+  )
+
+  const handleSwitchChange = useCallback((checked: boolean) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      isAnonymous: checked,
+      nameInput: checked ? 'Anonymous' : '',
+    }))
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      nameInput: false,
+    }))
+  }, [])
 
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto'
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight.toString()}px`
     }
-  }, [stressInput])
-
-  const submitStressAsync = useCallback(async () => {
-    const submittedName = isAnonymous ? 'Anonymous' : nameInput
-    try {
-      await Promise.all([
-        submitStress(stressInput, submittedName),
-        new Promise((resolve) => setTimeout(resolve, 3000)),
-      ])
-    } catch (error) {
-      console.error('Error submitting stress:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [isAnonymous, nameInput, stressInput])
+  }, [formData.stressInput])
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
+
+    const newErrors = {
+      stressInput: formData.stressInput.trim() === '',
+      nameInput: !formData.isAnonymous && formData.nameInput.trim() === '',
+    }
+
+    setErrors(newErrors)
+
+    if (newErrors.stressInput || newErrors.nameInput) {
+      return
+    }
+
     setIsLoading(true)
-    void submitStressAsync()
+    submitStress(
+      formData.stressInput,
+      formData.isAnonymous ? 'Anonymous' : formData.nameInput,
+    )
+      .then(() => {
+        // Wait for 3 seconds before setting isLoading to false
+        setTimeout(() => { setIsLoading(false); }, 3000)
+      })
+      .catch((error: unknown) => {
+        console.error('Error submitting stress:', error)
+        setIsLoading(false)
+      })
   }
 
   if (isLoading) {
@@ -99,25 +133,31 @@ export default function SubmitYourStress() {
         <form onSubmit={handleSubmit} className="flex w-full flex-col">
           <textarea
             ref={textareaRef}
-            className="block max-h-[256px] min-h-[128px] w-full resize-none overflow-y-auto text-wrap rounded-2xl bg-light-blue p-5 font-mono text-xs text-oren-1"
+            name="stressInput"
+            className={`block max-h-[256px] min-h-[128px] w-full resize-none overflow-y-auto text-wrap rounded-2xl bg-light-blue p-5 font-mono text-xs ${
+              errors.stressInput
+                ? 'animate-shake border-[1px] border-oren-3 placeholder-oren-3'
+                : 'text-oren-1'
+            }`}
             placeholder="Things that's stressing me out..."
-            value={stressInput}
-            onChange={(e) => {
-              setStressInput(e.target.value)
-            }}
+            value={formData.stressInput}
+            onChange={handleChange}
           />
           <input
+            name="nameInput"
             className={
-              isAnonymous
+              formData.isAnonymous
                 ? 'hidden'
-                : 'mt-2 h-5 w-full rounded-2xl bg-light-blue p-5 font-mono text-xs text-oren-1'
+                : `mt-2 h-5 w-full rounded-2xl bg-light-blue p-5 font-mono text-xs ${
+                    errors.nameInput
+                      ? 'animate-shake border-[1px] border-oren-3 placeholder-oren-3'
+                      : 'text-oren-1'
+                  }`
             }
             placeholder="Name"
-            value={nameInput}
-            onChange={(e) => {
-              setNameInput(e.target.value)
-            }}
-            disabled={isAnonymous}
+            value={formData.nameInput}
+            onChange={handleChange}
+            disabled={formData.isAnonymous}
           />
           <div className="mt-5 flex items-center">
             <TooltipProvider>
@@ -137,8 +177,8 @@ export default function SubmitYourStress() {
               Anonymous
             </Label>
             <Switch
-              checked={isAnonymous}
-              onCheckedChange={setIsAnonymous}
+              checked={formData.isAnonymous}
+              onCheckedChange={handleSwitchChange}
               className="ml-2"
             />
           </div>
