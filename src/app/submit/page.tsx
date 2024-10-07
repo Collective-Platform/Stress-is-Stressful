@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/tooltip'
 import room from '@/images/room.gif'
 import truck from '@/images/truck.gif'
+import { cn } from '@/lib/utils'
 import { HelpCircle } from 'lucide-react'
 import Image from 'next/image'
 import {
@@ -28,11 +29,9 @@ export default function SubmitYourStress() {
     isAnonymous: false,
   })
   const [isLoading, setIsLoading] = useState(false)
-  const [errors, setErrors] = useState({
-    stressInput: false,
-    nameInput: false,
-  })
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -40,10 +39,6 @@ export default function SubmitYourStress() {
       setFormData((prevState) => ({
         ...prevState,
         [name]: value,
-      }))
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: false,
       }))
     },
     [],
@@ -54,10 +49,6 @@ export default function SubmitYourStress() {
       ...prevState,
       isAnonymous: checked,
       nameInput: checked ? 'Anonymous' : '',
-    }))
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      nameInput: false,
     }))
   }, [])
 
@@ -70,31 +61,24 @@ export default function SubmitYourStress() {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
+    setIsSubmitted(true)
 
-    const newErrors = {
-      stressInput: formData.stressInput.trim() === '',
-      nameInput: !formData.isAnonymous && formData.nameInput.trim() === '',
+    if (formRef.current?.checkValidity()) {
+      setIsLoading(true)
+      submitStress(
+        formData.stressInput,
+        formData.isAnonymous ? 'Anonymous' : formData.nameInput,
+      )
+        .then(() => {
+          setTimeout(() => {
+            setIsLoading(false)
+          }, 3000)
+        })
+        .catch((error: unknown) => {
+          console.error('Error submitting stress:', error)
+          setIsLoading(false)
+        })
     }
-
-    setErrors(newErrors)
-
-    if (newErrors.stressInput || newErrors.nameInput) {
-      return
-    }
-
-    setIsLoading(true)
-    submitStress(
-      formData.stressInput,
-      formData.isAnonymous ? 'Anonymous' : formData.nameInput,
-    )
-      .then(() => {
-        // Wait for 3 seconds before setting isLoading to false
-        setTimeout(() => { setIsLoading(false); }, 3000)
-      })
-      .catch((error: unknown) => {
-        console.error('Error submitting stress:', error)
-        setIsLoading(false)
-      })
   }
 
   if (isLoading) {
@@ -130,35 +114,42 @@ export default function SubmitYourStress() {
       </div>
 
       <div className="flex w-full flex-col items-center justify-center pb-10 pl-6 pr-6 md:w-1/2 lg:p-[5%]">
-        <form onSubmit={handleSubmit} className="flex w-full flex-col">
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="flex w-full flex-col"
+          noValidate
+        >
           <textarea
+            required
             ref={textareaRef}
             name="stressInput"
-            className={`block max-h-[256px] min-h-[128px] w-full resize-none overflow-y-auto text-wrap rounded-2xl bg-light-blue p-5 font-mono text-xs ${
-              errors.stressInput
-                ? 'animate-shake border-[1px] border-oren-3 placeholder-oren-3'
-                : 'text-oren-1'
-            }`}
+            className={cn(
+              'block max-h-[256px] min-h-[128px] w-full resize-none overflow-y-auto text-wrap rounded-2xl bg-light-blue p-5 font-mono text-xs',
+              isSubmitted &&
+                'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
+              'text-oren-1',
+            )}
             placeholder="Things that's stressing me out..."
             value={formData.stressInput}
             onChange={handleChange}
           />
-          <input
-            name="nameInput"
-            className={
-              formData.isAnonymous
-                ? 'hidden'
-                : `mt-2 h-5 w-full rounded-2xl bg-light-blue p-5 font-mono text-xs ${
-                    errors.nameInput
-                      ? 'animate-shake border-[1px] border-oren-3 placeholder-oren-3'
-                      : 'text-oren-1'
-                  }`
-            }
-            placeholder="Name"
-            value={formData.nameInput}
-            onChange={handleChange}
-            disabled={formData.isAnonymous}
-          />
+          {!formData.isAnonymous && (
+            <input
+              required
+              name="nameInput"
+              className={cn(
+                `mt-2 h-5 w-full rounded-2xl bg-light-blue p-5 font-mono text-xs`,
+                isSubmitted &&
+                  'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
+                'text-oren-1',
+              )}
+              placeholder="Name"
+              value={formData.nameInput}
+              onChange={handleChange}
+              disabled={formData.isAnonymous}
+            />
+          )}
           <div className="mt-5 flex items-center">
             <TooltipProvider>
               <Tooltip>
