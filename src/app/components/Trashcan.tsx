@@ -35,17 +35,17 @@ const Trashcan: React.FC = () => {
   }
 
   return (
-    <div className="lg:items-top z-50 w-full pl-[10%] pr-[10%] align-middle">
+    <div className="lg:items-top z-50 w-full overflow-hidden pl-[10%] pr-[10%] align-middle">
       <div className="z-0 m-auto text-center lg:text-center">
-        <h1 className="font-pressstart2p decoration-20 text-stroke z-10 block bg-gradient-to-b from-oren-1 to-oren-3 bg-clip-text text-lg text-transparent decoration-solid drop-shadow-3xlo md:text-2xl xl:text-4xl xl:leading-snug">
-          ARE YOU READY TO
+        <h1 className="font-pressstart2p decoration-20 text-stroke z-10 block bg-gradient-to-b from-oren-1 to-oren-3 bg-clip-text text-2xl text-transparent decoration-solid drop-shadow-3xlo md:text-2xl xl:text-4xl xl:leading-snug">
+          ARE YOU READY
         </h1>
-        <h1 className="font-pressstart2p decoration-20 text-stroke z-10 mt-1 block bg-gradient-to-b from-oren-1 to-oren-3 bg-clip-text text-lg leading-8 text-transparent decoration-solid drop-shadow-3xlo md:text-2xl xl:text-4xl xl:leading-snug">
-          TOSS YOUR STRESS AWAY?
+        <h1 className="font-pressstart2p decoration-20 text-stroke z-10 mt-1 block bg-gradient-to-b from-oren-1 to-oren-3 bg-clip-text text-2xl leading-8 text-transparent decoration-solid drop-shadow-3xlo md:text-2xl xl:text-4xl xl:leading-snug">
+          TO TOSS YOUR STRESS AWAY?
         </h1>
       </div>
 
-      <div className="relative m-auto mt-10 h-[50vh] sm:mt-20 lg:w-1/2">
+      <div className="relative m-auto mt-[60px] h-[50vh] sm:mt-20 lg:w-1/2">
         <div className="flex align-top">
           <h1 className="inline-block text-[8px] text-white">Drag the paper</h1>
           <Image
@@ -54,24 +54,23 @@ const Trashcan: React.FC = () => {
             alt="arrow"
           />
         </div>
-        <div>
-          <Draggable
-            axis="both"
-            handle=".handle"
-            defaultPosition={{ x: 0, y: 0 }}
-            scale={1}
-            onStop={handleStop} // Call handleStop when dragging stops
-          >
-            <div ref={paperRef} className="handle z-50 -mt-5 ml-5">
-              <Image
-                className="z-50 h-12 w-12 md:h-16 md:w-16"
-                src={paper}
-                alt="paper"
-                draggable={false}
-              />
-            </div>
-          </Draggable>
-        </div>
+
+        <Draggable
+          axis="both"
+          handle=".handle"
+          defaultPosition={{ x: 0, y: 0 }}
+          scale={1}
+          onStop={handleStop} // Call handleStop when dragging stops
+        >
+          <div ref={paperRef} className="handle z-50 -mt-5 ml-5">
+            <Image
+              className="z-50 h-12 w-12 md:h-16 md:w-16"
+              src={paper}
+              alt="paper"
+              draggable={false}
+            />
+          </div>
+        </Draggable>
 
         {/* Bin image */}
         <div

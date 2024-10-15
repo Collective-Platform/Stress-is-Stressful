@@ -46,23 +46,41 @@ export default function ClientSideContent({
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-dark-blue to-light-blue p-8">
-      <div className="w-full max-w-2xl rounded-lg bg-white p-6 text-black shadow-lg">
-        {submissions.length === 0 ? (
-          <p>No submissions yet.</p>
-        ) : (
-          <div className="space-y-4">
-            <h1 className="mb-4 text-2xl font-bold">Stress Submissions</h1>
-            {submissions.map((submission) => (
-              <div
-                key={submission.id}
-                className="border-b border-gray-200 pb-2"
-              >
-                <p className="text-sm font-medium">{submission.stress}</p>
-                <p className="mt-1 text-xs text-gray-500">{submission.name}</p>
-              </div>
-            ))}
+      <div className="md:flex md:rounded-3xl md:bg-oren-1">
+        <div className="self-center rounded-3xl bg-oren-1 p-6 md:w-[50%]">
+          <h1 className="mb-4 text-[30px] font-bold text-dark-blue">
+            You Are Not Alone
+          </h1>
+          <p className="m-auto text-xs leading-5 text-dark-blue">
+            When you step out, you&apos;ll realise you&apos;re not the only one
+            struggling. We&apos;re meant to walk with each other in this life.
+          </p>
+          <div className="flex justify-center md:justify-start">
+            <button className="mt-4 rounded-xl border-2 border-solid border-dark-blue bg-oren-3 p-2 text-center">
+              Talk to Someone
+            </button>
           </div>
-        )}
+        </div>
+        <div className="mt-10 max-w-2xl rounded-lg text-oren-1 shadow-lg md:m-2 md:h-[90vh] md:w-[50%] md:overflow-y-auto md:rounded-3xl md:bg-white md:p-5 md:text-dark-blue">
+          {submissions.length === 0 ? (
+            <p>No submissions yet.</p>
+          ) : (
+            <div className="space-y-4">
+              {/* <h1>What's Stressing Others Out?</h1> */}
+              {submissions.map((submission) => (
+                <div
+                  key={submission.id}
+                  className="border-b border-gray-200 pb-2"
+                >
+                  <p className="text-sm font-medium">{submission.stress}</p>
+                  <p className="mt-1 text-[12px] text-gray-500">
+                    {submission.name}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </main>
   )

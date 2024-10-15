@@ -1,6 +1,5 @@
 'use client'
 
-import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import {
   Tooltip,
@@ -11,15 +10,10 @@ import {
 import room from '@/images/room.gif'
 import truck from '@/images/truck.gif'
 import { cn } from '@/lib/utils'
+import * as Form from '@radix-ui/react-form'
 import { HelpCircle } from 'lucide-react'
 import Image from 'next/image'
-import {
-  FormEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { submitStress } from './actions'
 
 export default function SubmitYourStress() {
@@ -31,7 +25,6 @@ export default function SubmitYourStress() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const formRef = useRef<HTMLFormElement>(null)
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -59,24 +52,27 @@ export default function SubmitYourStress() {
     }
   }, [formData.stressInput])
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setIsSubmitted(true)
 
-    if (formRef.current?.checkValidity()) {
+    if ((event.target as HTMLFormElement).checkValidity()) {
       setIsLoading(true)
-      submitStress(
-        formData.stressInput,
-        formData.isAnonymous ? 'Anonymous' : formData.nameInput,
-      )
+      Promise.all([
+        submitStress(
+          formData.stressInput,
+          formData.isAnonymous ? 'Anonymous' : formData.nameInput,
+        ),
+        new Promise((resolve) => setTimeout(resolve, 3000)),
+      ])
         .then(() => {
-          setTimeout(() => {
-            setIsLoading(false)
-          }, 3000)
+          setIsLoading(false)
+          setIsSubmitted(false)
         })
         .catch((error: unknown) => {
           console.error('Error submitting stress:', error)
           setIsLoading(false)
+          setIsSubmitted(false)
         })
     }
   }
@@ -114,72 +110,88 @@ export default function SubmitYourStress() {
       </div>
 
       <div className="flex w-full flex-col items-center justify-center pb-10 pl-6 pr-6 md:w-1/2 lg:p-[5%]">
-        <form
-          ref={formRef}
+        <Form.Root
           onSubmit={handleSubmit}
           className="flex w-full flex-col"
           noValidate
         >
-          <textarea
-            required
-            ref={textareaRef}
-            name="stressInput"
-            className={cn(
-              'block max-h-[256px] min-h-[128px] w-full resize-none overflow-y-auto text-wrap rounded-2xl bg-light-blue p-5 font-mono text-xs',
-              isSubmitted &&
-                'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
-              'text-oren-1',
-            )}
-            placeholder="Things that's stressing me out..."
-            value={formData.stressInput}
-            onChange={handleChange}
-          />
-          {!formData.isAnonymous && (
-            <input
-              required
-              name="nameInput"
-              className={cn(
-                `mt-2 h-5 w-full rounded-2xl bg-light-blue p-5 font-mono text-xs`,
-                isSubmitted &&
-                  'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
-                'text-oren-1',
-              )}
-              placeholder="Name"
-              value={formData.nameInput}
-              onChange={handleChange}
-              disabled={formData.isAnonymous}
-            />
-          )}
-          <div className="mt-5 flex items-center">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="cursor-help p-1">
-                    <HelpCircle size={24} className="text-oren-1" />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent className="text-[8px]">
-                  <p>Your name won&apos;t be recorded in our book.</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+          <Form.Field name="stressInput">
+            <Form.Control asChild>
+              <textarea
+                ref={textareaRef}
+                name="stressInput"
+                className={cn(
+                  'block max-h-[256px] min-h-[128px] w-full resize-none overflow-y-auto text-wrap rounded-2xl bg-light-blue p-5 font-mono text-xs',
+                  isSubmitted &&
+                    'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
+                  'text-oren-1',
+                )}
+                placeholder="Things that's stressing me out..."
+                value={formData.stressInput}
+                onChange={handleChange}
+                required
+              />
+            </Form.Control>
+          </Form.Field>
 
-            <Label htmlFor="Anonymous" className="ml-2 text-xs text-oren-1">
-              Anonymous
-            </Label>
-            <Switch
-              checked={formData.isAnonymous}
-              onCheckedChange={handleSwitchChange}
-              className="ml-2"
-            />
-          </div>
-          <button
-            type="submit"
-            className="mt-5 w-full content-center justify-center rounded-2xl bg-light-blue p-4 text-xs text-oren-1 hover:bg-dark-blue"
-          >
-            TOSS IT IN THE TRASH
-          </button>
-        </form>
+          {!formData.isAnonymous && (
+            <Form.Field name="nameInput">
+              <Form.Control asChild>
+                <input
+                  className={cn(
+                    `mt-2 h-5 w-full rounded-2xl bg-light-blue p-5 font-mono text-xs`,
+                    isSubmitted &&
+                      'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
+                    'text-oren-1',
+                  )}
+                  placeholder="Name"
+                  value={formData.nameInput}
+                  onChange={handleChange}
+                  disabled={formData.isAnonymous}
+                  required
+                />
+              </Form.Control>
+            </Form.Field>
+          )}
+
+          <Form.Field name="AnnonymousSwitch">
+            <div className="mt-5 flex items-center">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="cursor-help p-1">
+                      <HelpCircle size={24} className="text-oren-1" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent className="text-[8px]">
+                    <p>Your name won&apos;t be recorded in our book.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              <Form.Label
+                htmlFor="Anonymous"
+                className="ml-2 text-xs text-oren-1"
+              >
+                Anonymous
+              </Form.Label>
+              <Switch
+                checked={formData.isAnonymous}
+                onCheckedChange={handleSwitchChange}
+                className="ml-2"
+              />
+            </div>
+          </Form.Field>
+
+          <Form.Submit asChild>
+            <button
+              type="submit"
+              className="mt-5 w-full content-center justify-center rounded-2xl bg-light-blue p-4 text-xs text-oren-1 hover:bg-dark-blue"
+            >
+              TOSS IT IN THE TRASH
+            </button>
+          </Form.Submit>
+        </Form.Root>
       </div>
     </main>
   )
