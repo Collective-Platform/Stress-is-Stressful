@@ -103,7 +103,7 @@ function Parallax() {
       tl.to(
         cloud5.current,
         {
-          x: '-=500',
+          x: '+=500',
           y: '+=500',
         },
         0,

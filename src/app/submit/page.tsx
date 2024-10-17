@@ -118,6 +118,7 @@ export default function SubmitYourStress() {
           <Form.Field name="stressInput">
             <Form.Control asChild>
               <textarea
+                id="stressInput"
                 ref={textareaRef}
                 name="stressInput"
                 className={cn(
@@ -138,6 +139,7 @@ export default function SubmitYourStress() {
             <Form.Field name="nameInput">
               <Form.Control asChild>
                 <input
+                  id="nameInput"
                   className={cn(
                     `mt-2 h-5 w-full rounded-2xl bg-light-blue p-5 font-mono text-xs`,
                     isSubmitted &&
@@ -154,7 +156,7 @@ export default function SubmitYourStress() {
             </Form.Field>
           )}
 
-          <Form.Field name="AnnonymousSwitch">
+          <Form.Field name="anonymousSwitch">
             <div className="mt-5 flex items-center">
               <TooltipProvider>
                 <Tooltip>
@@ -170,12 +172,13 @@ export default function SubmitYourStress() {
               </TooltipProvider>
 
               <Form.Label
-                htmlFor="Anonymous"
+                htmlFor="anonymousSwitch"
                 className="ml-2 text-xs text-oren-1"
               >
                 Anonymous
               </Form.Label>
               <Switch
+                id="anonymousSwitch"
                 checked={formData.isAnonymous}
                 onCheckedChange={handleSwitchChange}
                 className="ml-2"

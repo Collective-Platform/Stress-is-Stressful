@@ -46,19 +46,21 @@ export default function ClientSideContent({
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-dark-blue to-light-blue p-8">
-      <div className="md:flex md:rounded-3xl md:bg-oren-1">
+      <div className="md:flex md:rounded-3xl md:bg-oren-1 lg:w-[80%]">
         <div className="self-center rounded-3xl bg-oren-1 p-6 md:w-[50%]">
-          <h1 className="mb-4 text-[30px] font-bold text-dark-blue">
+          <h1 className="mb-4 text-[24px] font-bold text-dark-blue mb:text-[32px] lg:text-[44px]">
             You Are Not Alone
           </h1>
           <p className="m-auto text-xs leading-5 text-dark-blue">
             When you step out, you&apos;ll realise you&apos;re not the only one
             struggling. We&apos;re meant to walk with each other in this life.
           </p>
-          <div className="flex justify-center md:justify-start">
-            <button className="mt-4 rounded-xl border-2 border-solid border-dark-blue bg-oren-3 p-2 text-center">
-              Talk to Someone
-            </button>
+          <div className="mt-8 flex justify-center md:justify-start">
+            <a href="https://ig.me/m/strictlystudents" target="_blank">
+              <button className="rounded-xl border-2 border-solid border-dark-blue bg-oren-3 p-2 text-center">
+                Talk to Someone
+              </button>
+            </a>
           </div>
         </div>
         <div className="mt-10 max-w-2xl rounded-lg text-oren-1 shadow-lg md:m-2 md:h-[90vh] md:w-[50%] md:overflow-y-auto md:rounded-3xl md:bg-white md:p-5 md:text-dark-blue">

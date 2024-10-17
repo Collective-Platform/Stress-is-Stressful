@@ -11,7 +11,7 @@ import Draggable from 'react-draggable'
 const Trashcan: React.FC = () => {
   const router = useRouter() // Next.js router
   const binRef = useRef<HTMLDivElement>(null) // Reference to the bin
-  const paperRef = useRef<HTMLDivElement>(null) // Reference to the paper
+  const paperRef = React.useRef<HTMLDivElement>(null) // Reference to the paper
   // const [dragged, setDragged] = useState(false)
 
   const handleStop = () => {
@@ -35,12 +35,12 @@ const Trashcan: React.FC = () => {
   }
 
   return (
-    <div className="lg:items-top z-50 w-full overflow-hidden pl-[10%] pr-[10%] align-middle">
-      <div className="z-0 m-auto text-center lg:text-center">
-        <h1 className="font-pressstart2p decoration-20 text-stroke z-10 block bg-gradient-to-b from-oren-1 to-oren-3 bg-clip-text text-2xl text-transparent decoration-solid drop-shadow-3xlo md:text-2xl xl:text-4xl xl:leading-snug">
+    <div className="lg:items-top w-full overflow-x-clip pl-[10%] pr-[10%] align-middle">
+      <div className="m-auto text-center lg:text-center">
+        <h1 className="font-pressstart2p decoration-20 text-stroke block bg-gradient-to-b from-oren-1 to-oren-3 bg-clip-text text-2xl text-transparent decoration-solid drop-shadow-3xlo md:text-2xl xl:text-4xl xl:leading-snug">
           ARE YOU READY
         </h1>
-        <h1 className="font-pressstart2p decoration-20 text-stroke z-10 mt-1 block bg-gradient-to-b from-oren-1 to-oren-3 bg-clip-text text-2xl leading-8 text-transparent decoration-solid drop-shadow-3xlo md:text-2xl xl:text-4xl xl:leading-snug">
+        <h1 className="font-pressstart2p decoration-20 text-stroke mt-1 block bg-gradient-to-b from-oren-1 to-oren-3 bg-clip-text text-2xl leading-8 text-transparent decoration-solid drop-shadow-3xlo md:text-2xl xl:text-4xl xl:leading-snug">
           TO TOSS YOUR STRESS AWAY?
         </h1>
       </div>
@@ -60,11 +60,12 @@ const Trashcan: React.FC = () => {
           handle=".handle"
           defaultPosition={{ x: 0, y: 0 }}
           scale={1}
-          onStop={handleStop} // Call handleStop when dragging stops
+          onStop={handleStop}
+          nodeRef={paperRef}
         >
-          <div ref={paperRef} className="handle z-50 -mt-5 ml-5">
+          <div ref={paperRef} className="handle absolute z-10 -mt-5 ml-5">
             <Image
-              className="z-50 h-12 w-12 md:h-16 md:w-16"
+              className="h-12 w-12 md:h-16 md:w-16"
               src={paper}
               alt="paper"
               draggable={false}
@@ -72,17 +73,12 @@ const Trashcan: React.FC = () => {
           </div>
         </Draggable>
 
-        {/* Bin image */}
         <div
           ref={binRef}
-          className="absolute bottom-10 right-0 z-0 h-auto flex-row content-end pr-0"
+          className="absolute bottom-10 right-0 h-auto flex-row content-end pr-0"
         >
           <h1 className="mb-3 text-[8px] text-white">Into the bin</h1>
-          <Image
-            className="z-0 m-auto h-full w-16 xl:w-20"
-            src={bin}
-            alt="bin"
-          />
+          <Image className="m-auto h-full w-16 xl:w-20" src={bin} alt="bin" />
         </div>
       </div>
     </div>
