@@ -14,6 +14,7 @@ const Trashcan: React.FC = () => {
   const binRef = useRef<HTMLDivElement>(null)
   const paperRef = React.useRef<HTMLDivElement>(null)
   const [lidOffset, setLidOffset] = useState(0)
+  const [isPaperVisible, setIsPaperVisible] = useState(true)
 
   const handleDrag = () => {
     const paperRect = paperRef.current?.getBoundingClientRect()
@@ -59,6 +60,7 @@ const Trashcan: React.FC = () => {
         paperRect.top < binRect.bottom
 
       if (isColliding) {
+        setIsPaperVisible(false)
         router.push('/submit')
       }
     }
@@ -86,24 +88,26 @@ const Trashcan: React.FC = () => {
           />
         </div>
 
-        <Draggable
-          axis="both"
-          handle=".handle"
-          defaultPosition={{ x: 0, y: 0 }}
-          scale={1}
-          onDrag={handleDrag}
-          onStop={handleStop}
-          nodeRef={paperRef}
-        >
-          <div ref={paperRef} className="handle absolute z-10 -mt-5 ml-5">
-            <Image
-              className="h-12 w-12 md:h-16 md:w-16"
-              src={paper}
-              alt="paper"
-              draggable={false}
-            />
-          </div>
-        </Draggable>
+        {isPaperVisible && (
+          <Draggable
+            axis="both"
+            handle=".handle"
+            defaultPosition={{ x: 0, y: 0 }}
+            scale={1}
+            onDrag={handleDrag}
+            onStop={handleStop}
+            nodeRef={paperRef}
+          >
+            <div ref={paperRef} className="handle absolute z-10 -mt-5 ml-5">
+              <Image
+                className="h-12 w-12 md:h-16 md:w-16"
+                src={paper}
+                alt="paper"
+                draggable={false}
+              />
+            </div>
+          </Draggable>
+        )}
 
         <div
           ref={binRef}
