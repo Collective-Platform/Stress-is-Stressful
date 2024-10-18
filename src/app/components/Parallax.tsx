@@ -41,7 +41,7 @@ function Parallax() {
           trigger: parallaxRef.current,
           start: 'top top',
           end: '5000 bottom',
-          scrub: true,
+          scrub: 0.5,
           pin: true,
           onUpdate: (self) => {
             setBackground(Math.ceil(self.progress * 100 + 20))

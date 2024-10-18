@@ -23,8 +23,9 @@ export default function SubmitYourStress() {
     isAnonymous: false,
   })
   const [isLoading, setIsLoading] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isInvalid, setIsInvalid] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const nameInputRef = useRef<HTMLInputElement>(null)
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -33,6 +34,7 @@ export default function SubmitYourStress() {
         ...prevState,
         [name]: value,
       }))
+      setIsInvalid(false)
     },
     [],
   )
@@ -54,7 +56,6 @@ export default function SubmitYourStress() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setIsSubmitted(true)
 
     if ((event.target as HTMLFormElement).checkValidity()) {
       setIsLoading(true)
@@ -67,13 +68,31 @@ export default function SubmitYourStress() {
       ])
         .then(() => {
           setIsLoading(false)
-          setIsSubmitted(false)
+          setIsInvalid(false)
+
+          setFormData({
+            stressInput: '',
+            nameInput: '',
+            isAnonymous: false,
+          })
         })
         .catch((error: unknown) => {
           console.error('Error submitting stress:', error)
           setIsLoading(false)
-          setIsSubmitted(false)
+          setIsInvalid(false)
         })
+    } else {
+      setIsInvalid(true)
+
+      if (textareaRef.current) {
+        textareaRef.current.blur()
+      }
+      if (nameInputRef.current) {
+        nameInputRef.current.blur()
+      }
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur()
+      }
     }
   }
 
@@ -123,7 +142,7 @@ export default function SubmitYourStress() {
                 name="stressInput"
                 className={cn(
                   'block max-h-[256px] min-h-[128px] w-full resize-none overflow-y-auto text-wrap rounded-2xl bg-light-blue p-5 font-mono text-xs',
-                  isSubmitted &&
+                  isInvalid &&
                     'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
                   'text-oren-1',
                 )}
@@ -142,7 +161,7 @@ export default function SubmitYourStress() {
                   id="nameInput"
                   className={cn(
                     `mt-2 h-5 w-full rounded-2xl bg-light-blue p-5 font-mono text-xs`,
-                    isSubmitted &&
+                    isInvalid &&
                       'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
                     'text-oren-1',
                   )}

@@ -18,16 +18,17 @@ const AnimatedBlock: React.FC<AnimatedBlockProps> = ({ children }) => {
         blockRef.current,
         {
           opacity: 0,
-          y: 50, // Start 50 pixels below its normal position
+          y: 50,
         },
         {
           opacity: 1,
           y: 0,
           scrollTrigger: {
             trigger: blockRef.current,
-            start: 'top bottom-=10%', // Starts animation when the top of the element is 10% from the bottom of the viewport
-            end: 'top center', // Ends animation when the top of the element reaches the center of the viewport
-            scrub: true, // Smoothly animates between start and end states as you scroll
+            start: 'top bottom-=10%',
+            end: 'top center',
+            scrub: true,
+            markers: false,
           },
         },
       )
@@ -110,7 +111,7 @@ export default function Home() {
           </p>
         </AnimatedBlock>
         <AnimatedBlock>
-          <p className="m-auto w-[80%] text-center text-xs leading-6 text-oren-3 lg:w-[50%]">
+          <p className="m-auto text-left text-xs leading-6 text-oren-3 lg:w-[70%]">
             &quot;When hard pressed, I cried to the Lord; he brought me into a
             spacious place. The Lord is with me; I will not be afraid...&quot;
             <br />
