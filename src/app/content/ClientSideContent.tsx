@@ -57,7 +57,7 @@ export default function ClientSideContent({
           </p>
           <div className="mt-8 flex justify-center md:justify-start">
             <a href="https://ig.me/m/strictlystudents" target="_blank">
-              <button className="rounded-xl border-2 border-solid border-dark-blue bg-oren-3 p-2 text-center">
+              <button className="rounded-xl border-2 border-solid border-dark-blue bg-oren-3 p-2 text-center text-dark-blue">
                 Talk to Someone
               </button>
             </a>

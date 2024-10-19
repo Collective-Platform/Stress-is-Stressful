@@ -74,8 +74,14 @@ export default function Home() {
           <p className="m-auto text-xs leading-6 text-oren-1 lg:w-[70%]">
             <br />
             You&apos;re trying to keep up with trends, but you&apos;re always
-            one step behind. You scroll and scroll, but you&apos;re not sure
-            why.
+            one step behind.
+            <br />
+          </p>
+        </AnimatedBlock>
+        <AnimatedBlock>
+          <p className="m-auto text-xs leading-6 text-oren-1 lg:w-[70%]">
+            <br />
+            You scroll and scroll, but you&apos;re not sure why.
             <br />
           </p>
         </AnimatedBlock>
@@ -97,15 +103,29 @@ export default function Home() {
         <AnimatedBlock>
           <p className="m-auto text-xs leading-6 text-oren-1 lg:w-[70%]">
             There&apos;s a lot going on inside you that you don&apos;t always
-            show others. Life can get messy, but you are not alone.
+            show others.
             <br />
             <br />
           </p>
         </AnimatedBlock>
         <AnimatedBlock>
           <p className="m-auto text-xs leading-6 text-oren-1 lg:w-[70%]">
-            Don&apos;t use your problems as an excuse to shut others out. We are
-            all just one breath away from feeling as if we&apos;re on our own.
+            Life can get messy, but you are not alone.
+            <br />
+            <br />
+          </p>
+        </AnimatedBlock>
+        <AnimatedBlock>
+          <p className="m-auto text-xs leading-6 text-oren-1 lg:w-[70%]">
+            Don&apos;t use your problems as an excuse to shut others out.
+            <br />
+            <br />
+          </p>
+        </AnimatedBlock>
+        <AnimatedBlock>
+          <p className="m-auto text-xs leading-6 text-oren-1 lg:w-[70%]">
+            We are all just one breath away from feeling as if we&apos;re on our
+            own.
             <br />
             <br />
           </p>
