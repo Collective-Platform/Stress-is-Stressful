@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { cn } from '@/lib/utils'
+import { Analytics } from '@vercel/analytics/react'
 import { Press_Start_2P } from 'next/font/google'
 import './globals.css'
 
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body className={cn(pressstart2p.className, 'flex min-h-full flex-col')}>
         {children}
+        <Analytics />
       </body>
     </html>
   )

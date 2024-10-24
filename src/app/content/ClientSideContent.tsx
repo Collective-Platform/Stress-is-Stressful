@@ -47,7 +47,7 @@ export default function ClientSideContent({
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-dark-blue to-light-blue p-8">
       <div className="md:flex md:rounded-3xl md:bg-oren-1 lg:w-[80%]">
-        <div className="self-center rounded-3xl bg-oren-1 p-6 md:w-[50%]">
+        <div className="self-center rounded-t-3xl bg-oren-1 p-6 md:w-[50%]">
           <h1 className="mb-4 text-[24px] font-bold text-dark-blue mb:text-[32px] lg:text-[44px]">
             You Are Not Alone
           </h1>
@@ -63,7 +63,7 @@ export default function ClientSideContent({
             </a>
           </div>
         </div>
-        <div className="mt-10 max-w-2xl rounded-lg text-oren-1 shadow-lg md:m-2 md:h-[90vh] md:w-[50%] md:overflow-y-auto md:rounded-3xl md:bg-white md:p-5 md:text-dark-blue">
+        <div className="rounded-b-3xl bg-white p-6 text-dark-blue shadow-lg md:m-2 md:h-[90vh] md:w-[50%] md:overflow-y-auto md:rounded-3xl md:bg-white md:p-5 md:text-dark-blue">
           {submissions.length === 0 ? (
             <p>No submissions yet.</p>
           ) : (
@@ -74,8 +74,8 @@ export default function ClientSideContent({
                   key={submission.id}
                   className="border-b border-gray-200 pb-2"
                 >
-                  <p className="text-sm font-medium">{submission.stress}</p>
-                  <p className="mt-1 text-[12px] text-gray-500">
+                  <p className="text-xs font-medium">{submission.stress}</p>
+                  <p className="mt-1 text-[8px] text-gray-500">
                     {submission.name}
                   </p>
                 </div>
