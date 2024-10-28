@@ -16,5 +16,5 @@ export async function submitStress(stress: string, name: string) {
     throw new Error('Failed to submit stress')
   }
 
-  redirect('/content')
+  redirect('/prayer')
 }
