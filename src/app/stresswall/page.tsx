@@ -6,6 +6,8 @@ interface Submission {
   id: number
   stress: string
   name: string
+  prayers: number
+  hasReacted?: boolean
 }
 
 export const dynamic = 'force-dynamic'
@@ -14,7 +16,7 @@ async function getSubmissions() {
   const supabase = createServerComponentClient({ cookies })
   const { data, error } = await supabase
     .from('stress_submissions')
-    .select('id, stress, name')
+    .select('id, stress, name, prayers')
     .order('created_at', { ascending: false })
 
   if (error) {
