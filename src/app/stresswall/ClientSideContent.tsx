@@ -7,6 +7,12 @@ interface Submission {
   id: number
   stress: string
   name: string
+  prayers: number
+  hasReacted?: boolean
+}
+
+type ReactedSubmissions = {
+  [key: number]: boolean
 }
 
 export default function ClientSideContent({
@@ -20,29 +26,126 @@ export default function ClientSideContent({
   const supabase = createClientComponentClient()
 
   useEffect(() => {
+    // Load reactions from local storage on initial render
+    const storedReactions = localStorage.getItem('reactedSubmissions')
+    const reactedSubmissions: ReactedSubmissions = storedReactions
+      ? (JSON.parse(storedReactions) as ReactedSubmissions)
+      : {}
+
+    setSubmissions((prev) =>
+      prev.map((submission) => ({
+        ...submission,
+        hasReacted: Boolean(reactedSubmissions[submission.id]),
+      })),
+    )
+
     const channel = supabase
       .channel('stress_submissions_changes')
+
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'stress_submissions' },
         (payload) => {
-          console.log('New submission received:', payload.new)
+          const newSubmission = payload.new as Submission
+          console.log('New submission received:', newSubmission)
           setSubmissions((currentSubmissions) => [
-            payload.new as Submission,
+            newSubmission,
             ...currentSubmissions,
           ])
         },
       )
+
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'stress_submissions' },
+        (payload) => {
+          const updatedSubmission = payload.new as Submission
+          console.log('Updated submission received:', updatedSubmission)
+
+          setSubmissions((prev) =>
+            prev.map((submission) =>
+              submission.id === updatedSubmission.id
+                ? { ...submission, prayers: updatedSubmission.prayers }
+                : submission,
+            ),
+          )
+        },
+      )
+
       .subscribe((status) => {
         console.log('Realtime subscription status:', status)
       })
 
     return () => {
       supabase.removeChannel(channel).catch((error: unknown) => {
-        console.error(error)
+        console.error('Error removing channel:', error)
       })
     }
   }, [supabase])
+
+  const handlePrayerClick = async (submissionId: number) => {
+    const currentSubmission = submissions.find(
+      (submission) => submission.id === submissionId,
+    )
+    if (!currentSubmission) return
+
+    const isReacted = currentSubmission.hasReacted ?? false
+    const newPrayersCount = isReacted
+      ? currentSubmission.prayers - 1
+      : currentSubmission.prayers + 1
+
+    setSubmissions((prev) =>
+      prev.map((submission) =>
+        submission.id === submissionId
+          ? { ...submission, prayers: newPrayersCount, hasReacted: !isReacted }
+          : submission,
+      ),
+    )
+
+    try {
+      // Update the database
+      const { error } = await supabase
+        .from('stress_submissions')
+        .update({ prayers: newPrayersCount })
+        .eq('id', submissionId)
+
+      if (error) throw error
+
+      // Update local storage if database update succeeds
+      const storedReactions = localStorage.getItem('reactedSubmissions')
+      const reactedSubmissions: ReactedSubmissions = storedReactions
+        ? (JSON.parse(storedReactions) as ReactedSubmissions)
+        : {}
+
+      if (isReacted) {
+        //type assertion added here
+        const { [submissionId]: _, ...rest } = reactedSubmissions as {
+          [key: number]: boolean
+        }
+        localStorage.setItem('reactedSubmissions', JSON.stringify(rest))
+      } else {
+        localStorage.setItem(
+          'reactedSubmissions',
+          JSON.stringify({ ...reactedSubmissions, [submissionId]: true }),
+        )
+      }
+    } catch (error) {
+      console.error('Error updating prayer count:', error)
+
+      //Rever optimistic update on error
+      setSubmissions((prev) =>
+        prev.map((submission) =>
+          submission.id === submissionId
+            ? {
+                ...submission,
+                prayers: currentSubmission.prayers,
+                hasReacted: isReacted,
+              }
+            : submission,
+        ),
+      )
+    }
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-dark-blue to-light-blue p-8">
@@ -68,16 +171,29 @@ export default function ClientSideContent({
             <p>No submissions yet.</p>
           ) : (
             <div className="space-y-4">
-              {/* <h1>What's Stressing Others Out?</h1> */}
               {submissions.map((submission) => (
                 <div
                   key={submission.id}
                   className="border-b border-gray-200 pb-2"
                 >
                   <p className="text-xs font-medium">{submission.stress}</p>
-                  <p className="mt-1 text-[8px] text-gray-500">
-                    {submission.name}
-                  </p>
+                  <div className="mt-1 flex items-center justify-between">
+                    <p className="mt-1 text-[8px] text-gray-500">
+                      {submission.name}
+                    </p>
+                    <button
+                      onClick={() => void handlePrayerClick(submission.id)}
+                      className={`flex items-center justify-center rounded-lg border px-2 py-1 ${
+                        submission.hasReacted
+                          ? 'border-blue-500'
+                          : 'border-gray-200'
+                      }`}
+                    >
+                      <span className="ml-1 text-xs"></span>
+                      <span className="text-sm">🙏</span>
+                      <span className="ml-1 text-xs">{submission.prayers}</span>
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
