@@ -1,6 +1,6 @@
 'use client'
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 
 interface Submission {
@@ -23,7 +23,7 @@ export default function ClientSideContent({
   const [submissions, setSubmissions] = useState<Submission[]>(
     initialSubmissions || [],
   )
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     // Load reactions from local storage on initial render

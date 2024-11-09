@@ -1,5 +1,4 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
 import ClientSideContent from './ClientSideContent'
 
 interface Submission {
@@ -13,7 +12,7 @@ interface Submission {
 export const dynamic = 'force-dynamic'
 
 async function getSubmissions() {
-  const supabase = createServerComponentClient({ cookies })
+  const supabase = createClient()
   const { data, error } = await supabase
     .from('stress_submissions')
     .select('id, stress, name, prayers')

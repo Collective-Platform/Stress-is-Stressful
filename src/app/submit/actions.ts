@@ -1,6 +1,6 @@
 'use server'
 
-import { supabase } from '@/lib/supabaseClient'
+import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
 export async function submitStress(stress: string, name: string) {
@@ -8,6 +8,7 @@ export async function submitStress(stress: string, name: string) {
     throw new Error('Stress and name are required')
   }
 
+  const supabase = createClient()
   const { error } = await supabase
     .from('stress_submissions')
     .insert([{ stress, name }])
