@@ -1,18 +1,19 @@
 import { createClient } from '@/lib/supabase/server'
+
 import ClientSideContent from './ClientSideContent'
 
 interface Submission {
+  hasReacted?: boolean
   id: number
-  stress: string
   name: string
   prayers: number
-  hasReacted?: boolean
+  stress: string
 }
 
 export const dynamic = 'force-dynamic'
 
 async function getSubmissions() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('stress_submissions')
     .select('id, stress, name, prayers')

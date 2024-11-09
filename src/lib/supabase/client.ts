@@ -1,11 +1,12 @@
-import process from 'process'
+'use client'
+
 import { createBrowserClient } from '@supabase/ssr'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
 export function createClient() {
-  if (supabaseUrl === undefined || supabaseAnonKey === undefined) {
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+
+  if (supabaseAnonKey === undefined || supabaseUrl === undefined) {
     throw new Error('Missing Supabase environment variables')
   }
 

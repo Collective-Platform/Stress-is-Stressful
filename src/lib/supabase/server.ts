@@ -1,16 +1,14 @@
-import process from 'process'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+export async function createClient() {
+  const cookieStore = await cookies()
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 
-export function createClient() {
-  if (supabaseUrl === undefined || supabaseAnonKey === undefined) {
+  if (supabaseAnonKey === undefined || supabaseUrl === undefined) {
     throw new Error('Missing Supabase environment variables')
   }
-
-  const cookieStore = cookies()
 
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
@@ -19,7 +17,7 @@ export function createClient() {
       },
       setAll(cookiesToSet) {
         try {
-          for (const { name, value, options } of cookiesToSet) {
+          for (const { name, options, value } of cookiesToSet) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             cookieStore.set(name, value, options)
           }

@@ -14,24 +14,25 @@ import * as Form from '@radix-ui/react-form'
 import { HelpCircle } from 'lucide-react'
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
+
 import { submitStress } from './actions'
 
 export default function SubmitYourStress() {
   const [formData, setFormData] = useState({
-    stressInput: '',
-    nameInput: '',
     isAnonymous: false,
+    nameInput: '',
+    stressInput: '',
   })
   const [isLoading, setIsLoading] = useState(false)
   const [isInvalid, setIsInvalid] = useState(false)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const nameInputRef = useRef<HTMLInputElement>(null)
+  const textareaReference = useRef<HTMLTextAreaElement>(null)
+  const nameInputReference = useRef<HTMLInputElement>(null)
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target
-      setFormData((prevState) => ({
-        ...prevState,
+      setFormData((previousState) => ({
+        ...previousState,
         [name]: value,
       }))
       setIsInvalid(false)
@@ -40,17 +41,17 @@ export default function SubmitYourStress() {
   )
 
   const handleSwitchChange = useCallback((checked: boolean) => {
-    setFormData((prevState) => ({
-      ...prevState,
+    setFormData((previousState) => ({
+      ...previousState,
       isAnonymous: checked,
       nameInput: checked ? 'Anonymous' : '',
     }))
   }, [])
 
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight.toString()}px`
+    if (textareaReference.current) {
+      textareaReference.current.style.height = 'auto'
+      textareaReference.current.style.height = `${textareaReference.current.scrollHeight.toString()}px`
     }
   }, [formData.stressInput])
 
@@ -71,9 +72,9 @@ export default function SubmitYourStress() {
           setIsInvalid(false)
 
           setFormData({
-            stressInput: '',
-            nameInput: '',
             isAnonymous: false,
+            nameInput: '',
+            stressInput: '',
           })
         })
         .catch((error: unknown) => {
@@ -84,11 +85,11 @@ export default function SubmitYourStress() {
     } else {
       setIsInvalid(true)
 
-      if (textareaRef.current) {
-        textareaRef.current.blur()
+      if (textareaReference.current) {
+        textareaReference.current.blur()
       }
-      if (nameInputRef.current) {
-        nameInputRef.current.blur()
+      if (nameInputReference.current) {
+        nameInputReference.current.blur()
       }
       if (document.activeElement instanceof HTMLElement) {
         document.activeElement.blur()
@@ -102,9 +103,9 @@ export default function SubmitYourStress() {
         <div className="flex flex-col items-center py-[40vh] align-middle">
           <div className="align-middle">
             <Image
-              src={truck}
               alt={'truck'}
               className="w-[200px] lg:w-[300px] 2xl:w-[20vw]"
+              src={truck}
             />
           </div>
           <h3 className="m-5 text-center text-xs text-orange-200 lg:text-sm 2xl:text-2xl">
@@ -122,34 +123,34 @@ export default function SubmitYourStress() {
           What&apos;s Stressing You Out?
         </h1>
         <Image
+          alt={'a gif of a room'}
           className="w-full content-center"
           src={room}
-          alt={'a gif of a room'}
         />
       </div>
 
       <div className="flex w-full flex-col items-center justify-center pb-10 pl-6 pr-6 md:w-1/2 lg:p-[5%]">
         <Form.Root
-          onSubmit={handleSubmit}
           className="flex w-full flex-col"
           noValidate
+          onSubmit={handleSubmit}
         >
           <Form.Field name="stressInput">
             <Form.Control asChild>
               <textarea
-                id="stressInput"
-                ref={textareaRef}
-                name="stressInput"
                 className={cn(
                   'block max-h-[256px] min-h-[128px] w-full resize-none overflow-y-auto text-wrap rounded-2xl bg-light-blue p-5 font-mono text-xs',
                   isInvalid &&
                     'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
                   'text-oren-1',
                 )}
-                placeholder="Things that's stressing me out..."
-                value={formData.stressInput}
+                id="stressInput"
+                name="stressInput"
                 onChange={handleChange}
+                placeholder="Things that's stressing me out..."
+                ref={textareaReference}
                 required
+                value={formData.stressInput}
               />
             </Form.Control>
           </Form.Field>
@@ -158,18 +159,18 @@ export default function SubmitYourStress() {
             <Form.Field name="nameInput">
               <Form.Control asChild>
                 <input
-                  id="nameInput"
                   className={cn(
                     `mt-2 h-5 w-full rounded-2xl bg-light-blue p-5 font-mono text-xs`,
                     isInvalid &&
                       'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
                     'text-oren-1',
                   )}
-                  placeholder="Name"
-                  value={formData.nameInput}
-                  onChange={handleChange}
                   disabled={formData.isAnonymous}
+                  id="nameInput"
+                  onChange={handleChange}
+                  placeholder="Name"
                   required
+                  value={formData.nameInput}
                 />
               </Form.Control>
             </Form.Field>
@@ -181,7 +182,7 @@ export default function SubmitYourStress() {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="cursor-help p-1">
-                      <HelpCircle size={24} className="text-oren-1" />
+                      <HelpCircle className="text-oren-1" size={24} />
                     </div>
                   </TooltipTrigger>
                   <TooltipContent className="text-[8px]">
@@ -191,24 +192,24 @@ export default function SubmitYourStress() {
               </TooltipProvider>
 
               <Form.Label
-                htmlFor="anonymousSwitch"
                 className="ml-2 text-xs text-oren-1"
+                htmlFor="anonymousSwitch"
               >
                 Anonymous
               </Form.Label>
               <Switch
-                id="anonymousSwitch"
                 checked={formData.isAnonymous}
-                onCheckedChange={handleSwitchChange}
                 className="ml-2"
+                id="anonymousSwitch"
+                onCheckedChange={handleSwitchChange}
               />
             </div>
           </Form.Field>
 
           <Form.Submit asChild>
             <button
-              type="submit"
               className="mt-5 w-full content-center justify-center rounded-2xl bg-light-blue p-4 text-xs text-oren-1 hover:bg-dark-blue"
+              type="submit"
             >
               TOSS IT IN THE TRASH
             </button>

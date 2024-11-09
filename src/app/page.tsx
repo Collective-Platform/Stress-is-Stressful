@@ -2,34 +2,35 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import React, { ReactNode, useEffect, useRef } from 'react'
+
 import Parallax from './components/Parallax'
 import Trashcan from './components/Trashcan'
 
-interface AnimatedBlockProps {
+interface AnimatedBlockProperties {
   children: ReactNode
 }
 
-const AnimatedBlock: React.FC<AnimatedBlockProps> = ({ children }) => {
-  const blockRef = useRef<HTMLDivElement>(null)
+const AnimatedBlock: React.FC<AnimatedBlockProperties> = ({ children }) => {
+  const blockReference = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (blockRef.current) {
+    if (blockReference.current) {
       gsap.fromTo(
-        blockRef.current,
+        blockReference.current,
         {
           opacity: 0,
           y: 50,
         },
         {
           opacity: 1,
-          y: 0,
           scrollTrigger: {
-            trigger: blockRef.current,
-            start: 'top bottom-=10%',
             end: 'top center',
-            scrub: true,
             markers: false,
+            scrub: true,
+            start: 'top bottom-=10%',
+            trigger: blockReference.current,
           },
+          y: 0,
         },
       )
     }
@@ -42,7 +43,7 @@ const AnimatedBlock: React.FC<AnimatedBlockProps> = ({ children }) => {
   }, [])
 
   return (
-    <div ref={blockRef} className="opacity-0">
+    <div className="opacity-0" ref={blockReference}>
       {children}
     </div>
   )
