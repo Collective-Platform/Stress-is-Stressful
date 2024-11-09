@@ -132,7 +132,7 @@ export default function ClientSideContent({
     } catch (error) {
       console.error('Error updating prayer count:', error)
 
-      //Rever optimistic update on error
+      //Revert optimistic update on error
       setSubmissions((prev) =>
         prev.map((submission) =>
           submission.id === submissionId
