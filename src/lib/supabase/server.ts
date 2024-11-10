@@ -18,6 +18,7 @@ export async function createClient() {
       setAll(cookiesToSet) {
         try {
           for (const { name, options, value } of cookiesToSet) {
+            // NOTE: https://github.com/supabase/ssr/issues/53
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             cookieStore.set(name, value, options)
           }
