@@ -1,14 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 
 import ClientSideContent from './ClientSideContent'
-
-interface Submission {
-  hasReacted?: boolean
-  id: number
-  name: string
-  prayers: number
-  stress: string
-}
+import { Submission } from './types'
 
 export const dynamic = 'force-dynamic'
 

@@ -3,12 +3,14 @@
 import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 
-interface Submission {
-  hasReacted?: boolean
-  id: number
-  name: string
-  prayers: number
-  stress: string
+import { Submission as BaseSubmission } from './types'
+
+interface Submission extends BaseSubmission {
+  hasReacted: boolean
+}
+
+interface ClientSideContentProps {
+  initialSubmissions: BaseSubmission[] | null
 }
 
 type ReactedSubmissions = {
@@ -17,11 +19,12 @@ type ReactedSubmissions = {
 
 export default function ClientSideContent({
   initialSubmissions,
-}: {
-  initialSubmissions: null | Submission[]
-}) {
-  const [submissions, setSubmissions] = useState<Submission[]>(
-    initialSubmissions || [],
+}: ClientSideContentProps) {
+  const [submissions, setSubmissions] = useState<Submission[]>(() =>
+    (initialSubmissions ?? []).map((s) => ({
+      ...s,
+      hasReacted: false,
+    })),
   )
   const supabase = createClient()
 
@@ -89,7 +92,7 @@ export default function ClientSideContent({
     )
     if (!currentSubmission) return
 
-    const isReacted = currentSubmission.hasReacted ?? false
+    const isReacted = currentSubmission.hasReacted
     const newPrayersCount = isReacted
       ? currentSubmission.prayers - 1
       : currentSubmission.prayers + 1
