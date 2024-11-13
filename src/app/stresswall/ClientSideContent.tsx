@@ -1,14 +1,16 @@
 'use client'
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 
-interface Submission {
-  id: number
-  stress: string
-  name: string
-  prayers: number
-  hasReacted?: boolean
+import { Submission as BaseSubmission } from './types'
+
+interface Submission extends BaseSubmission {
+  hasReacted: boolean
+}
+
+interface ClientSideContentProps {
+  initialSubmissions: BaseSubmission[] | null
 }
 
 type ReactedSubmissions = {
@@ -17,13 +19,14 @@ type ReactedSubmissions = {
 
 export default function ClientSideContent({
   initialSubmissions,
-}: {
-  initialSubmissions: Submission[] | null
-}) {
-  const [submissions, setSubmissions] = useState<Submission[]>(
-    initialSubmissions || [],
+}: ClientSideContentProps) {
+  const [submissions, setSubmissions] = useState<Submission[]>(() =>
+    (initialSubmissions ?? []).map((s) => ({
+      ...s,
+      hasReacted: false,
+    })),
   )
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     // Load reactions from local storage on initial render
@@ -32,8 +35,8 @@ export default function ClientSideContent({
       ? (JSON.parse(storedReactions) as ReactedSubmissions)
       : {}
 
-    setSubmissions((prev) =>
-      prev.map((submission) => ({
+    setSubmissions((previous) =>
+      previous.map((submission) => ({
         ...submission,
         hasReacted: Boolean(reactedSubmissions[submission.id]),
       })),
@@ -62,8 +65,8 @@ export default function ClientSideContent({
           const updatedSubmission = payload.new as Submission
           console.log('Updated submission received:', updatedSubmission)
 
-          setSubmissions((prev) =>
-            prev.map((submission) =>
+          setSubmissions((previous) =>
+            previous.map((submission) =>
               submission.id === updatedSubmission.id
                 ? { ...submission, prayers: updatedSubmission.prayers }
                 : submission,
@@ -89,15 +92,15 @@ export default function ClientSideContent({
     )
     if (!currentSubmission) return
 
-    const isReacted = currentSubmission.hasReacted ?? false
+    const isReacted = currentSubmission.hasReacted
     const newPrayersCount = isReacted
       ? currentSubmission.prayers - 1
       : currentSubmission.prayers + 1
 
-    setSubmissions((prev) =>
-      prev.map((submission) =>
+    setSubmissions((previous) =>
+      previous.map((submission) =>
         submission.id === submissionId
-          ? { ...submission, prayers: newPrayersCount, hasReacted: !isReacted }
+          ? { ...submission, hasReacted: !isReacted, prayers: newPrayersCount }
           : submission,
       ),
     )
@@ -132,14 +135,14 @@ export default function ClientSideContent({
     } catch (error) {
       console.error('Error updating prayer count:', error)
 
-      //Rever optimistic update on error
-      setSubmissions((prev) =>
-        prev.map((submission) =>
+      //Revert optimistic update on error
+      setSubmissions((previous) =>
+        previous.map((submission) =>
           submission.id === submissionId
             ? {
                 ...submission,
-                prayers: currentSubmission.prayers,
                 hasReacted: isReacted,
+                prayers: currentSubmission.prayers,
               }
             : submission,
         ),
@@ -173,8 +176,8 @@ export default function ClientSideContent({
             <div className="space-y-4">
               {submissions.map((submission) => (
                 <div
-                  key={submission.id}
                   className="border-b border-gray-200 pb-2"
+                  key={submission.id}
                 >
                   <p className="text-xs font-medium">{submission.stress}</p>
                   <div className="mt-1 flex items-center justify-between">
@@ -182,12 +185,12 @@ export default function ClientSideContent({
                       {submission.name}
                     </p>
                     <button
-                      onClick={() => void handlePrayerClick(submission.id)}
                       className={`flex items-center justify-center rounded-lg border px-2 py-1 ${
                         submission.hasReacted
                           ? 'border-blue-500'
                           : 'border-gray-200'
                       }`}
+                      onClick={() => void handlePrayerClick(submission.id)}
                     >
                       <span className="ml-1 text-xs"></span>
                       <span className="text-sm">🙏</span>

@@ -11,14 +11,14 @@ import Draggable from 'react-draggable'
 
 const Trashcan: React.FC = () => {
   const router = useRouter()
-  const binRef = useRef<HTMLDivElement>(null)
-  const paperRef = React.useRef<HTMLDivElement>(null)
+  const binReference = useRef<HTMLDivElement>(null)
+  const paperReference = useRef<HTMLDivElement>(null)
   const [lidOffset, setLidOffset] = useState(0)
   const [isPaperVisible, setIsPaperVisible] = useState(true)
 
   const handleDrag = () => {
-    const paperRect = paperRef.current?.getBoundingClientRect()
-    const binRect = binRef.current?.getBoundingClientRect()
+    const paperRect = paperReference.current?.getBoundingClientRect()
+    const binRect = binReference.current?.getBoundingClientRect()
 
     if (paperRect && binRect) {
       const distance = Math.sqrt(
@@ -49,8 +49,8 @@ const Trashcan: React.FC = () => {
   }
 
   const handleStop = () => {
-    const paperRect = paperRef.current?.getBoundingClientRect()
-    const binRect = binRef.current?.getBoundingClientRect()
+    const paperRect = paperReference.current?.getBoundingClientRect()
+    const binRect = binReference.current?.getBoundingClientRect()
 
     if (paperRect && binRect) {
       const isColliding =
@@ -82,36 +82,39 @@ const Trashcan: React.FC = () => {
         <div className="flex align-top">
           <h1 className="inline-block text-[8px] text-white">Drag the paper</h1>
           <Image
+            alt="arrow"
             className="-ml-[5%] mt-[5%] inline-block h-10 w-auto md:-ml-[2%] md:mt-[3%]"
             src={arrow}
-            alt="arrow"
           />
         </div>
 
         {isPaperVisible && (
           <Draggable
             axis="both"
-            handle=".handle"
             defaultPosition={{ x: 0, y: 0 }}
-            scale={1}
+            handle=".handle"
+            nodeRef={paperReference}
             onDrag={handleDrag}
             onStop={handleStop}
-            nodeRef={paperRef}
+            scale={1}
           >
-            <div ref={paperRef} className="handle absolute z-10 -mt-5 ml-5">
+            <div
+              className="handle absolute z-10 -mt-5 ml-5"
+              ref={paperReference}
+            >
               <Image
-                className="h-12 w-12 md:h-16 md:w-16"
-                src={paper}
                 alt="paper"
+                className="h-12 w-12 md:h-16 md:w-16"
                 draggable={false}
+                src={paper}
               />
             </div>
           </Draggable>
         )}
 
         <div
-          ref={binRef}
           className="absolute bottom-10 right-0 h-auto flex-row content-end pr-0"
+          ref={binReference}
         >
           <h1 className="mb-3 text-[8px] text-white">Into the bin</h1>
           <div
@@ -120,9 +123,9 @@ const Trashcan: React.FC = () => {
               transition: 'transform 0.1s ease-out',
             }}
           >
-            <Image className="m-auto h-full w-16 xl:w-20" src={lid} alt="lid" />
+            <Image alt="lid" className="m-auto h-full w-16 xl:w-20" src={lid} />
           </div>
-          <Image className="m-auto h-full w-16 xl:w-20" src={bin} alt="bin" />
+          <Image alt="bin" className="m-auto h-full w-16 xl:w-20" src={bin} />
         </div>
       </div>
     </div>
