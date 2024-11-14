@@ -1,9 +1,9 @@
 /** @type {import('prettier').Config} */
 const config = {
-  tailwindFunctions: ['cva', 'cx'],
   plugins: ['prettier-plugin-tailwindcss'],
-  singleQuote: true,
   semi: false,
+  singleQuote: true,
+  tailwindFunctions: ['cva', 'cx'],
 }
 
 export default config
