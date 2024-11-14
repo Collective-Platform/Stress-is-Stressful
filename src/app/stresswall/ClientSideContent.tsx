@@ -13,9 +13,7 @@ interface ClientSideContentProps {
   initialSubmissions: BaseSubmission[] | null
 }
 
-type ReactedSubmissions = {
-  [key: number]: boolean
-}
+type ReactedSubmissions = Record<number, boolean>
 
 export default function ClientSideContent({
   initialSubmissions,
@@ -122,9 +120,10 @@ export default function ClientSideContent({
 
       if (isReacted) {
         //type assertion added here
-        const { [submissionId]: _, ...rest } = reactedSubmissions as {
-          [key: number]: boolean
-        }
+        const { [submissionId]: _, ...rest } = reactedSubmissions as Record<
+          number,
+          boolean
+        >
         localStorage.setItem('reactedSubmissions', JSON.stringify(rest))
       } else {
         localStorage.setItem(

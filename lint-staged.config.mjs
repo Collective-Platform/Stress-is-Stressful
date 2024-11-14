@@ -1,5 +1,5 @@
-import path from 'path'
-import process from 'process'
+import path from 'node:path'
+import process from 'node:process'
 
 /** @type {import('lint-staged').ConfigFn} */
 const buildEslintCommand = (filenames) =>
