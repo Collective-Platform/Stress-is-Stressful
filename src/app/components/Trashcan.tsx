@@ -93,7 +93,7 @@ const Trashcan: React.FC = () => {
             axis="both"
             defaultPosition={{ x: 0, y: 0 }}
             handle=".handle"
-            nodeRef={paperReference}
+            nodeRef={paperReference as React.RefObject<HTMLElement>}
             onDrag={handleDrag}
             onStop={handleStop}
             scale={1}
