@@ -1,10 +1,12 @@
 'use client'
+
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import React, { ReactNode, useEffect, useRef } from 'react'
 
 import Parallax from './components/Parallax'
 import Trashcan from './components/Trashcan'
+import Wall from './components/Wall'
 
 interface AnimatedBlockProperties {
   children: ReactNode
@@ -150,6 +152,7 @@ export default function Home() {
       </div>
 
       <Trashcan />
+      <Wall />
     </main>
   )
 }
