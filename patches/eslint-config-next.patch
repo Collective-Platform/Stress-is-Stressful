@@ -1,0 +1,16 @@
+diff --git a/parser.js b/parser.js
+index 9e9fd22cfc0733a8e136571066faae1ff58388da..8871796f00a54ff9696bcb71d13abcab6ebe7125 100644
+--- a/parser.js
++++ b/parser.js
+@@ -1,9 +1,11 @@
+ const {
+   parse,
+   parseForESLint,
++  meta,
+ } = require('next/dist/compiled/babel/eslint-parser')
+ 
+ module.exports = {
+   parse,
+   parseForESLint,
++  meta,
+ }
