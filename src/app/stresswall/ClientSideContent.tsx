@@ -1,7 +1,8 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
-import { useEffect, useState } from 'react'
+import { cn } from '@/lib/utils'
+import { useEffect, useRef, useState } from 'react'
 
 import { Submission as BaseSubmission } from './types'
 
@@ -24,9 +25,13 @@ export default function ClientSideContent({
       hasReacted: false,
     })),
   )
-  const supabase = createClient()
+
+  // Use useRef to store the Supabase client
+  const supabaseRef = useRef(createClient())
 
   useEffect(() => {
+    const supabase = supabaseRef.current
+
     // Load reactions from local storage on initial render
     const storedReactions = localStorage.getItem('reactedSubmissions')
     const reactedSubmissions: ReactedSubmissions = storedReactions
@@ -42,7 +47,6 @@ export default function ClientSideContent({
 
     const channel = supabase
       .channel('stress_submissions_changes')
-
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'stress_submissions' },
@@ -82,33 +86,29 @@ export default function ClientSideContent({
         console.error('Error removing channel:', error)
       })
     }
-  }, [supabase])
+  }, [])
 
-  const handlePrayerClick = async (submissionId: number) => {
-    const currentSubmission = submissions.find(
-      (submission) => submission.id === submissionId,
-    )
-    if (!currentSubmission) return
-
-    const isReacted = currentSubmission.hasReacted
+  const handlePrayerClick = async (submission: Submission) => {
+    const isReacted = submission.hasReacted
     const newPrayersCount = isReacted
-      ? currentSubmission.prayers - 1
-      : currentSubmission.prayers + 1
+      ? submission.prayers - 1
+      : submission.prayers + 1
 
+    // Update submissions state optimistically
     setSubmissions((previous) =>
-      previous.map((submission) =>
-        submission.id === submissionId
-          ? { ...submission, hasReacted: !isReacted, prayers: newPrayersCount }
-          : submission,
+      previous.map((s) =>
+        s.id === submission.id
+          ? { ...s, hasReacted: !isReacted, prayers: newPrayersCount }
+          : s,
       ),
     )
 
     try {
       // Update the database
-      const { error } = await supabase
+      const { error } = await supabaseRef.current
         .from('stress_submissions')
         .update({ prayers: newPrayersCount })
-        .eq('id', submissionId)
+        .eq('id', submission.id)
 
       if (error) throw error
 
@@ -119,31 +119,26 @@ export default function ClientSideContent({
         : {}
 
       if (isReacted) {
-        //type assertion added here
-        const { [submissionId]: _, ...rest } = reactedSubmissions as Record<
-          number,
-          boolean
-        >
+        const { [submission.id]: _, ...rest } = reactedSubmissions
         localStorage.setItem('reactedSubmissions', JSON.stringify(rest))
       } else {
         localStorage.setItem(
           'reactedSubmissions',
-          JSON.stringify({ ...reactedSubmissions, [submissionId]: true }),
+          JSON.stringify({ ...reactedSubmissions, [submission.id]: true }),
         )
       }
     } catch (error) {
       console.error('Error updating prayer count:', error)
 
-      //Revert optimistic update on error
       setSubmissions((previous) =>
-        previous.map((submission) =>
-          submission.id === submissionId
+        previous.map((s) =>
+          s.id === submission.id
             ? {
                 ...submission,
                 hasReacted: isReacted,
-                prayers: currentSubmission.prayers,
+                prayers: submission.prayers,
               }
-            : submission,
+            : s,
         ),
       )
     }
@@ -184,12 +179,13 @@ export default function ClientSideContent({
                       {submission.name}
                     </p>
                     <button
-                      className={`flex items-center justify-center rounded-lg border px-2 py-1 ${
+                      className={cn(
+                        'flex items-center justify-center rounded-lg border px-2 py-1',
                         submission.hasReacted
                           ? 'border-blue-500'
-                          : 'border-gray-200'
-                      }`}
-                      onClick={() => void handlePrayerClick(submission.id)}
+                          : 'border-gray-200',
+                      )}
+                      onClick={() => void handlePrayerClick(submission)}
                     >
                       <span className="ml-1 text-xs"></span>
                       <span className="text-sm">🙏</span>
