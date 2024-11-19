@@ -1,7 +1,6 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
-
 import { cn } from '@/lib/utils'
 import { useEffect, useRef, useState } from 'react'
 
@@ -30,10 +29,9 @@ export default function ClientSideContent({
   // Use useRef to store the Supabase client
   const supabaseRef = useRef(createClient())
 
+  
   useEffect(() => {
     const supabase = supabaseRef.current
-
-
     // Load reactions from local storage on initial render
     const storedReactions = localStorage.getItem('reactedSubmissions')
     const reactedSubmissions: ReactedSubmissions = storedReactions
@@ -89,7 +87,6 @@ export default function ClientSideContent({
         console.error('Error removing channel:', error)
       })
     }
-
   }, [])
 
   const handlePrayerClick = async (submission: Submission) => {
@@ -104,13 +101,11 @@ export default function ClientSideContent({
         s.id === submission.id
           ? { ...s, hasReacted: !isReacted, prayers: newPrayersCount }
           : s,
-
       ),
     )
 
     try {
       // Update the database
-
       const { error } = await supabaseRef.current
         .from('stress_submissions')
         .update({ prayers: newPrayersCount })
@@ -125,16 +120,12 @@ export default function ClientSideContent({
         : {}
 
       if (isReacted) {
-
         const { [submission.id]: _, ...rest } = reactedSubmissions
-
         localStorage.setItem('reactedSubmissions', JSON.stringify(rest))
       } else {
         localStorage.setItem(
           'reactedSubmissions',
-
           JSON.stringify({ ...reactedSubmissions, [submission.id]: true }),
-
         )
       }
     } catch (error) {
@@ -149,7 +140,6 @@ export default function ClientSideContent({
                 prayers: submission.prayers,
               }
             : s,
-
         ),
       )
     }
@@ -190,7 +180,6 @@ export default function ClientSideContent({
                       {submission.name}
                     </p>
                     <button
-
                       className={cn(
                         'flex items-center justify-center rounded-lg border px-2 py-1',
                         submission.hasReacted
@@ -198,7 +187,6 @@ export default function ClientSideContent({
                           : 'border-gray-200',
                       )}
                       onClick={() => void handlePrayerClick(submission)}
-
                     >
                       <span className="ml-1 text-xs"></span>
                       <span className="text-sm">🙏</span>
