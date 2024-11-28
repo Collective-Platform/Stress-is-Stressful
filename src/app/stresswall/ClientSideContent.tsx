@@ -26,13 +26,12 @@ export default function ClientSideContent({
     })),
   )
 
-  // Use useRef to store the Supabase client
+  const [loading, setLoading] = useState<Record<number, boolean>>({})
   const supabaseRef = useRef(createClient())
 
-  
   useEffect(() => {
     const supabase = supabaseRef.current
-    // Load reactions from local storage on initial render
+
     const storedReactions = localStorage.getItem('reactedSubmissions')
     const reactedSubmissions: ReactedSubmissions = storedReactions
       ? (JSON.parse(storedReactions) as ReactedSubmissions)
@@ -47,27 +46,22 @@ export default function ClientSideContent({
 
     const channel = supabase
       .channel('stress_submissions_changes')
-
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'stress_submissions' },
         (payload) => {
           const newSubmission = payload.new as Submission
-          console.log('New submission received:', newSubmission)
           setSubmissions((currentSubmissions) => [
             newSubmission,
             ...currentSubmissions,
           ])
         },
       )
-
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'stress_submissions' },
         (payload) => {
           const updatedSubmission = payload.new as Submission
-          console.log('Updated submission received:', updatedSubmission)
-
           setSubmissions((previous) =>
             previous.map((submission) =>
               submission.id === updatedSubmission.id
@@ -77,10 +71,7 @@ export default function ClientSideContent({
           )
         },
       )
-
-      .subscribe((status) => {
-        console.log('Realtime subscription status:', status)
-      })
+      .subscribe()
 
     return () => {
       supabase.removeChannel(channel).catch((error: unknown) => {
@@ -90,12 +81,15 @@ export default function ClientSideContent({
   }, [])
 
   const handlePrayerClick = async (submission: Submission) => {
+    if (loading[submission.id]) return
+
+    setLoading((prev) => ({ ...prev, [submission.id]: true }))
+
     const isReacted = submission.hasReacted
     const newPrayersCount = isReacted
-      ? submission.prayers - 1
+      ? Math.max(submission.prayers - 1, 0) // Prevent negative prayers count
       : submission.prayers + 1
 
-    // Update submissions state optimistically
     setSubmissions((previous) =>
       previous.map((s) =>
         s.id === submission.id
@@ -105,7 +99,6 @@ export default function ClientSideContent({
     )
 
     try {
-      // Update the database
       const { error } = await supabaseRef.current
         .from('stress_submissions')
         .update({ prayers: newPrayersCount })
@@ -113,7 +106,6 @@ export default function ClientSideContent({
 
       if (error) throw error
 
-      // Update local storage if database update succeeds
       const storedReactions = localStorage.getItem('reactedSubmissions')
       const reactedSubmissions: ReactedSubmissions = storedReactions
         ? (JSON.parse(storedReactions) as ReactedSubmissions)
@@ -130,7 +122,6 @@ export default function ClientSideContent({
       }
     } catch (error) {
       console.error('Error updating prayer count:', error)
-
       setSubmissions((previous) =>
         previous.map((s) =>
           s.id === submission.id
@@ -142,6 +133,11 @@ export default function ClientSideContent({
             : s,
         ),
       )
+    } finally {
+      // Add a brief delay to handle consecutive clicks on the prayer button smoothly.
+      setTimeout(() => {
+        setLoading((prev) => ({ ...prev, [submission.id]: false }))
+      }, 100)
     }
   }
 
@@ -153,7 +149,7 @@ export default function ClientSideContent({
             You Are Not Alone
           </h1>
           <p className="m-auto text-xs leading-5 text-dark-blue">
-            When you step out, you&apos;ll realise you&apos;re not the only one
+            When you step out, you&apos;ll realize you&apos;re not the only one
             struggling. We&apos;re meant to walk with each other in this life.
           </p>
           <div className="mt-8 flex justify-center md:justify-start">
@@ -166,7 +162,9 @@ export default function ClientSideContent({
         </div>
         <div className="rounded-b-3xl bg-white p-6 text-dark-blue shadow-lg md:m-2 md:h-[90vh] md:w-[50%] md:overflow-y-auto md:rounded-3xl md:bg-white md:p-5 md:text-dark-blue">
           {submissions.length === 0 ? (
-            <p>No submissions yet.</p>
+            <p className="text-center text-gray-500">
+              No submissions yet. Share your thoughts to appear here!
+            </p>
           ) : (
             <div className="space-y-4">
               {submissions.map((submission) => (
@@ -186,11 +184,15 @@ export default function ClientSideContent({
                           ? 'border-blue-500'
                           : 'border-gray-200',
                       )}
+                      disabled={loading[submission.id]}
                       onClick={() => void handlePrayerClick(submission)}
                     >
-                      <span className="ml-1 text-xs"></span>
                       <span className="text-sm">🙏</span>
-                      <span className="ml-1 text-xs">{submission.prayers}</span>
+                      {submission.prayers > 0 && (
+                        <span className="ml-1 text-xs">
+                          {submission.prayers}
+                        </span>
+                      )}
                     </button>
                   </div>
                 </div>
