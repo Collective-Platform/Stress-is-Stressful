@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html className="h-full" lang="en">
-      <GoogleTagManager gaId="GTM-MW9M4Z3F" />
+      <GoogleTagManager gtmId="GTM-MW9M4Z3F" />
       <body className={cn(pressstart2p.className, 'flex min-h-full flex-col')}>
         {children}
         <Analytics />
