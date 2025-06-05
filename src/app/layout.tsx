@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 import { cn } from '@/lib/utils'
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleTagManager } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Press_Start_2P } from 'next/font/google'
@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html className="h-full" lang="en">
-      <GoogleAnalytics gaId="GTM-MW9M4Z3F" />
+      <GoogleTagManager gaId="GTM-MW9M4Z3F" />
       <body className={cn(pressstart2p.className, 'flex min-h-full flex-col')}>
         {children}
         <Analytics />
