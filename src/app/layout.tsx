@@ -7,6 +7,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Press_Start_2P } from 'next/font/google'
 
 import './globals.css'
+import Script from 'next/script'
 
 const pressstart2p = Press_Start_2P({
   subsets: ['latin'],
