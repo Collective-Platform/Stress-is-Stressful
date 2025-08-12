@@ -7,7 +7,10 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Press_Start_2P } from 'next/font/google'
 
 import './globals.css'
+
 import Script from 'next/script'
+
+import Presence from './components/Presence'
 
 const pressstart2p = Press_Start_2P({
   subsets: ['latin'],
@@ -64,6 +67,7 @@ export default function RootLayout({
       <GoogleTagManager gtmId="GTM-MW9M4Z3F" />
       <body className={cn(pressstart2p.className, 'flex min-h-full flex-col')}>
         {children}
+        <Presence />
         <Analytics />
         <SpeedInsights />
       </body>
