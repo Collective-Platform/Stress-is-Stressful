@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 
+import Presence from '../components/Presence'
 import ClientSideContent from './ClientSideContent'
 import { Submission } from './types'
 
@@ -23,5 +24,10 @@ async function getSubmissions() {
 export default async function ContentPage() {
   const initialSubmissions = await getSubmissions()
 
-  return <ClientSideContent initialSubmissions={initialSubmissions} />
+  return (
+    <>
+      <Presence />
+      <ClientSideContent initialSubmissions={initialSubmissions} />
+    </>
+  )
 }

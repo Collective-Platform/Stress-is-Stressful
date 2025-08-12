@@ -1,0 +1,13 @@
+{
+  "deno.enable": true,
+  "deno.lint": true,
+  "deno.unstable": true,
+  // Tell ESLint to not run in your Deno functions directory,
+  // because the Deno extension will handle linting for these files.
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "eslint.ignorePatterns": ["supabase/functions/**"],
+  // This ensures files in this folder are treated as Deno files
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  }
+}
