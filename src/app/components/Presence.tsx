@@ -134,11 +134,11 @@ export default function Presence({
                   <span className="absolute -top-1 select-none">
                     {animalEmoji}
                   </span>
-
-                  <span className="absolute -bottom-4 select-none p-0.5 text-2xl dark:bg-black/50">
-                    {flagEmoji}
-                  </span>
-
+                  {flagEmoji && (
+                    <span className="absolute -bottom-4 z-50 select-none p-0.5 text-2xl dark:bg-black/50">
+                      {flagEmoji}
+                    </span>
+                  )}
                 </div>
               </li>
             )
