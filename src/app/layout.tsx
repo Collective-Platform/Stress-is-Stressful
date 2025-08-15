@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { presenceCountryCodeToFlag } from '@/lib/presence.utils'
 import { cn } from '@/lib/utils'
 import { GoogleTagManager } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
@@ -27,7 +28,10 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const headersList = await headers()
-  const flag = headersList.get('x-user-flag') ?? null
+  const country = headersList.get('x-user-country')
+  const flag =
+    presenceCountryCodeToFlag(country) ??
+    (process.env.NODE_ENV === 'development' ? '🏳️' : null)
   const initialLocation = { flag }
 
   return (
