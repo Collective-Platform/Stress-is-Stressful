@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next()
 
   if (country) {
-    response.headers.set('x-user-flag', country)
+    response.headers.set('x-user-country', country)
   }
 
   return response
