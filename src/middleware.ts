@@ -1,15 +1,17 @@
 import { geolocation } from '@vercel/functions' // Correct import
 import { type NextRequest, NextResponse } from 'next/server'
 
-export function middleware(request: NextRequest) {
-   
-  const geo = geolocation(request)
+interface GeoData {
+  flag: string | undefined
+}
 
-   
-  const flag = geo.flag ?? ''
+export function middleware(request: NextRequest) {
+  const geoFunction = geolocation as (req: NextRequest) => GeoData
+  const geo = geoFunction(request)
+
+  const flag = geo.flag ?? ' '
 
   const response = NextResponse.next()
-   
   response.headers.set('x-user-flag', flag)
 
   return response
