@@ -78,7 +78,6 @@ export default function Presence({
         }
       })
     }
-
     setupPresence()
 
     return () => {
@@ -125,7 +124,6 @@ export default function Presence({
                 key={presence.user_id}
                 onMouseEnter={() => {
                   setHoveredUserId(presence.user_id)
-                  ;<h1>Anonymous</h1>
                 }}
                 onMouseLeave={() => {
                   setHoveredUserId(null)
@@ -137,7 +135,7 @@ export default function Presence({
                     {animalEmoji}
                   </span>
                   {flagEmoji && (
-                    <span className="absolute -bottom-4 select-none p-0.5 text-2xl dark:bg-black/50">
+                    <span className="absolute -bottom-4 z-50 select-none p-0.5 text-2xl dark:bg-black/50">
                       {flagEmoji}
                     </span>
                   )}
