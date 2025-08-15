@@ -1,26 +1,25 @@
 'use client'
 
-import {
-  getAnonymousId,
-  presenceCountryCodeToFlag,
-  presenceUserAnimal,
-} from '@/lib/presence.utils'
+import { getAnonymousId, presenceUserAnimal } from '@/lib/presence.utils'
 import { createClient } from '@/lib/supabase/client'
 import { RealtimeChannel } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
 
-interface GeoIPData {
-  city: null | string
-  countryCode: null | string
-  region: null | string
+interface LocationData {
+  flag: null | string
 }
 
-type Presence = {
+interface Presence {
+  flag?: null | string
   online_at: string
   user_id: string
-} & Partial<GeoIPData>
+}
 
-export default function Presence() {
+export default function Presence({
+  initialLocation,
+}: {
+  initialLocation: LocationData
+}) {
   const [onlineUsers, setOnlineUsers] = useState<Map<string, Presence>>(
     new Map(),
   )
@@ -29,30 +28,9 @@ export default function Presence() {
   useEffect(() => {
     const supabase = createClient()
     const clientId = getAnonymousId()
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     let channel: RealtimeChannel
 
-    const setupPresence = async () => {
-      let locationData: Partial<GeoIPData> = {}
-      try {
-        if (supabaseUrl) {
-          const response = await fetch(
-            `${supabaseUrl}/functions/v1/get-user-location`,
-          )
-          console.log(
-            'GeoIP Fetch Response:',
-            response.status,
-            response.statusText,
-          )
-          if (response.ok) {
-            locationData = (await response.json()) as Partial<GeoIPData>
-            console.log('Received Location Data:', locationData)
-          }
-        }
-      } catch (error) {
-        console.error('Could not fetch geoip data:', error)
-      }
-
+    const setupPresence = () => {
       channel = supabase.channel('online-users', {
         config: {
           presence: {
@@ -95,19 +73,19 @@ export default function Presence() {
           void channel.track({
             online_at: new Date().toISOString(),
             user_id: clientId,
-            ...locationData,
+            ...initialLocation,
           })
         }
       })
     }
 
-    void setupPresence()
+    setupPresence()
 
     return () => {
       console.log('Unsubscribing from channel.')
       void supabase.removeChannel(channel)
     }
-  }, [])
+  }, [initialLocation])
 
   const usersToRender = [...onlineUsers.values()]
 
@@ -136,7 +114,7 @@ export default function Presence() {
         {visibleUsers
           .map((presence, index) => {
             const [animalEmoji] = presenceUserAnimal(presence.user_id)
-            const flagEmoji = presenceCountryCodeToFlag(presence.countryCode)
+            const flagEmoji = presence.flag
 
             const zIndex = totalUsers - index
             const isHovered = hoveredUserId === presence.user_id
@@ -147,6 +125,7 @@ export default function Presence() {
                 key={presence.user_id}
                 onMouseEnter={() => {
                   setHoveredUserId(presence.user_id)
+                  ;<h1>Anonymous</h1>
                 }}
                 onMouseLeave={() => {
                   setHoveredUserId(null)
@@ -170,4 +149,10 @@ export default function Presence() {
       </ul>
     </div>
   )
+}
+
+export interface GeoIPData {
+  city: null | string
+  countryCode: null | string
+  region: null | string
 }

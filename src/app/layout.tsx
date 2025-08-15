@@ -5,6 +5,7 @@ import { GoogleTagManager } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Press_Start_2P } from 'next/font/google'
+import { headers } from 'next/headers'
 
 import './globals.css'
 
@@ -22,11 +23,13 @@ export const metadata: Metadata = {
   title: 'Strictly Students',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
+  const headersList = await headers()
+  const flag = headersList.get('x-user-flag') ?? null
+  const initialLocation = { flag }
+
   return (
     <html className="h-full" lang="en">
       <Script
@@ -34,7 +37,7 @@ export default function RootLayout({
           __html: `
           window.chatwootSettings = {
             position: "right",
-            type: "expanded_bubble",
+            type: "standard_bubble",
             launcherTitle: "Chat with us",
           };
 
@@ -67,7 +70,7 @@ export default function RootLayout({
       <GoogleTagManager gtmId="GTM-MW9M4Z3F" />
       <body className={cn(pressstart2p.className, 'flex min-h-full flex-col')}>
         {children}
-        <Presence />
+        <Presence initialLocation={initialLocation} />
         <Analytics />
         <SpeedInsights />
       </body>

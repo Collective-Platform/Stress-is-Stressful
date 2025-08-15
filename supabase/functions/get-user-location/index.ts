@@ -6,23 +6,29 @@ interface GeoIPData {
   region: null | string
 }
 
-Deno.serve((req: Request) => {
+interface SupabaseLocation {
+  city?: string
+  country?: string
+  region?: string
+}
+
+serve((req: Request) => {
   const locationHeader = req.headers.get('x-supabase-edge-location')
 
-  let location: Partial<GeoIPData> = {}
+  let parsedLocation: SupabaseLocation = {}
 
   try {
-    location = locationHeader
-      ? (JSON.parse(locationHeader) as Partial<GeoIPData>)
-      : {}
+    if (locationHeader) {
+      parsedLocation = JSON.parse(locationHeader) as SupabaseLocation
+    }
   } catch (error) {
     console.error('Failed to parse location header:', error)
   }
 
   const data: GeoIPData = {
-    city: location.city ?? null,
-    countryCode: location.countryCode ?? null,
-    region: location.region ?? null,
+    city: parsedLocation.city ?? null,
+    countryCode: parsedLocation.country ?? null,
+    region: parsedLocation.region ?? null,
   }
 
   return new Response(JSON.stringify(data), {

@@ -18,6 +18,7 @@
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.46.1",
     "@vercel/analytics": "^1.4.0",
+    "@vercel/functions": "^2.2.11",
     "@vercel/speed-insights": "^1.0.13",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -27,6 +28,7 @@
     "react": "19.0.0-rc-5c56b873-20241107",
     "react-dom": "19.0.0-rc-5c56b873-20241107",
     "react-draggable": "^4.4.6",
+    "stress-is-stressful": "link:",
     "supabase": "^2.33.9",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
