@@ -9,8 +9,12 @@ const buildEslintCommand = (filenames) =>
 
 /** @type {import('lint-staged').Config} */
 const config = {
-  '*.{js,jsx,ts,tsx,cjs,mjs}': ['prettier --write', buildEslintCommand],
   '*.json': ['prettier --write'],
+  './{src,app,components,lib,pages}/**/*.{js,jsx,ts,tsx,cjs,mjs}': [
+    'prettier --write',
+    buildEslintCommand,
+  ],
+  './supabase/functions/**/*.ts': ['prettier --write'],
 }
 
 export default config
