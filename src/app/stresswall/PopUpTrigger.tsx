@@ -10,15 +10,14 @@ export default function PopUpTrigger() {
   const submissionId = [...searchParams.keys()][0]
 
   const [aiResponse, setAiResponse] = useState<null | string>(null)
-  const [loadingAI, setLoadingAI] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     if (!submissionId) return
 
     const fetchAI = async () => {
       try {
-        setLoadingAI(true)
-
+        setIsLoading(true)
         const res = await fetch(`/api/ai-response?submissionId=${submissionId}`)
         if (!res.ok) throw new Error('AI request failed')
 
@@ -27,14 +26,16 @@ export default function PopUpTrigger() {
         setAiResponse(data.text)
       } catch (error) {
         console.error(error)
-        setAiResponse('Sorry, we couldn’t prepare your letter.')
+        // setAiResponse('Sorry, we couldn’t prepare your letter.')
       } finally {
-        setLoadingAI(false)
+        setIsLoading(false)
       }
     }
 
     void fetchAI()
   }, [submissionId])
 
-  return <>{loadingAI ? <></> : <PopUp aiResponse={aiResponse} />}</>
+  return (
+    <>{!isLoading && aiResponse ? <PopUp aiResponse={aiResponse} /> : <></>}</>
+  )
 }
