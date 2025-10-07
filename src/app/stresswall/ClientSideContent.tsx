@@ -48,7 +48,7 @@ export default function ClientSideContent({
       .channel('stress_submissions_changes')
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'test_stress_submissions' },
+        { event: 'INSERT', schema: 'public', table: 'stress_submissions' },
         (payload) => {
           const newSubmission = payload.new as Submission
           setSubmissions((currentSubmissions) => [
