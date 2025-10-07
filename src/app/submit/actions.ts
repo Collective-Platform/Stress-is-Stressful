@@ -9,7 +9,7 @@ export async function submitStress(stress: string, name: string) {
 
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('test_stress_submissions')
+    .from('stress_submissions')
     .insert([{ name, stress }])
     .select('id')
     .single()
