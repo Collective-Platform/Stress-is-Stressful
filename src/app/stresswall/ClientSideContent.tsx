@@ -45,7 +45,7 @@ export default function ClientSideContent({
     )
 
     const channel = supabase
-      .channel('test_stress_submissions_changes')
+      .channel('stress_submissions_changes')
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'test_stress_submissions' },
@@ -59,7 +59,7 @@ export default function ClientSideContent({
       )
       .on(
         'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'test_stress_submissions' },
+        { event: 'UPDATE', schema: 'public', table: 'stress_submissions' },
         (payload) => {
           const updatedSubmission = payload.new as Submission
           setSubmissions((previous) =>
@@ -100,7 +100,7 @@ export default function ClientSideContent({
 
     try {
       const { error } = await supabaseRef.current
-        .from('test_stress_submissions')
+        .from('stress_submissions')
         .update({ prayers: newPrayersCount })
         .eq('id', submission.id)
 
