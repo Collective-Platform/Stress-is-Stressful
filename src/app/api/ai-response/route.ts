@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   const supabase = await createClient()
 
   const { data, error } = await supabase
-    .from('test_stress_submissions')
+    .from('stress_submissions')
     .select('stress, ai_response')
     .eq('id', submissionId)
     .single()
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
     aiResponse = response.text
 
     const { error: insertError } = await supabase
-      .from('test_stress_submissions')
+      .from('stress_submissions')
       .update({ ai_response: aiResponse })
       .eq('id', submissionId)
 
