@@ -111,6 +111,7 @@ export default function PopUp({ aiResponse }: { aiResponse: null | string }) {
                     alt="Letter"
                     className="h-full w-full object-contain"
                     fill={true}
+                    priority
                     src="/images/letter.png"
                     style={{ objectFit: 'contain' }}
                   />
