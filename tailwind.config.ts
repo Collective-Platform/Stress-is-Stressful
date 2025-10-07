@@ -84,6 +84,7 @@ const config: Config = {
         },
       },
       screens: {
+        ip: '430px',
         mb: '320px',
       },
     },

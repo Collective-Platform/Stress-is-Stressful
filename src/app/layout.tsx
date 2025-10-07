@@ -10,7 +10,7 @@ import { headers } from 'next/headers'
 
 import './globals.css'
 
-import Script from 'next/script'
+// import Script from 'next/script'
 
 import Presence from './components/Presence'
 
@@ -36,7 +36,7 @@ export default async function RootLayout({
 
   return (
     <html className="h-full" lang="en">
-      <Script
+      {/* <Script
         dangerouslySetInnerHTML={{
           __html: `
           window.chatwootSettings = {
@@ -70,7 +70,7 @@ export default async function RootLayout({
         }}
         id="chatwoot"
         strategy="afterInteractive"
-      />
+      /> */}
       <GoogleTagManager gtmId="GTM-MW9M4Z3F" />
       <body className={cn(pressstart2p.className, 'flex min-h-full flex-col')}>
         {children}
