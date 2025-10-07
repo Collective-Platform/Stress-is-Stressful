@@ -125,7 +125,7 @@ export default function PopUp({ aiResponse }: { aiResponse: null | string }) {
                     <div className="flex w-full flex-col items-center">
                       <a
                         className="hover:bg-dark-e flex w-full content-center items-center justify-center gap-2 rounded-xl border-2 border-solid border-dark-blue bg-oren-3 p-2 text-center text-xs text-dark-blue hover:text-oren-1"
-                        href="https://ig.me/m/strictlystudents?text=Hey%20can%20i%20know%20who%20u%20are"
+                        href="https://ig.me/m/strictlystudents"
                       >
                         I want to talk to someone <SendHorizontal />
                       </a>
