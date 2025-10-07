@@ -1,7 +1,6 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
 
 export async function submitStress(stress: string, name: string) {
   if (!stress.trim() || !name.trim()) {
@@ -9,13 +8,16 @@ export async function submitStress(stress: string, name: string) {
   }
 
   const supabase = await createClient()
-  const { error } = await supabase
-    .from('stress_submissions')
+  const { data, error } = await supabase
+    .from('test_stress_submissions')
     .insert([{ name, stress }])
+    .select('id')
+    .single()
 
   if (error) {
+    console.error('Supabase insert failed:', error)
     throw new Error('Failed to submit stress')
   }
 
-  redirect('/stresswall')
+  return data.id as number
 }

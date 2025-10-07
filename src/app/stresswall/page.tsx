@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 
 import ClientSideContent from './ClientSideContent'
+import PopUpTrigger from './PopUpTrigger'
 import { Submission } from './types'
 
 export const dynamic = 'force-dynamic'
@@ -26,6 +27,7 @@ export default async function ContentPage() {
   return (
     <>
       <ClientSideContent initialSubmissions={initialSubmissions} />
+      <PopUpTrigger />
     </>
   )
 }

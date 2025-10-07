@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils'
 import * as Form from '@radix-ui/react-form'
 import { HelpCircle } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { submitStress } from './actions'
@@ -27,6 +28,9 @@ export default function SubmitYourStress() {
   const [isInvalid, setIsInvalid] = useState(false)
   const textareaReference = useRef<HTMLTextAreaElement>(null)
   const nameInputReference = useRef<HTMLInputElement>(null)
+  const [isRedirecting, setIsRedirecting] = useState(false)
+
+  const router = useRouter()
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -55,33 +59,37 @@ export default function SubmitYourStress() {
     }
   }, [formData.stressInput])
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     if ((event.target as HTMLFormElement).checkValidity()) {
       setIsLoading(true)
-      Promise.all([
-        submitStress(
+      setIsRedirecting(true)
+
+      try {
+        const submissionId = await submitStress(
           formData.stressInput,
           formData.isAnonymous ? 'Anonymous' : formData.nameInput,
-        ),
-        new Promise((resolve) => setTimeout(resolve, 5000)),
-      ])
-        .then(() => {
-          setIsLoading(false)
-          setIsInvalid(false)
+        )
 
-          setFormData({
-            isAnonymous: false,
-            nameInput: '',
-            stressInput: '',
-          })
+        const idString = String(submissionId)
+
+        router.push(`/stresswall?${idString}`)
+
+        setIsLoading(false)
+        setIsInvalid(false)
+
+        setFormData({
+          isAnonymous: false,
+          nameInput: '',
+          stressInput: '',
         })
-        .catch((error: unknown) => {
-          console.error('Error submitting stress:', error)
-          setIsLoading(false)
-          setIsInvalid(false)
-        })
+      } catch (error) {
+        console.error('Error submitting stress:', error)
+        setIsInvalid(false)
+        setIsLoading(false)
+        setIsRedirecting(false)
+      }
     } else {
       setIsInvalid(true)
 
@@ -97,7 +105,7 @@ export default function SubmitYourStress() {
     }
   }
 
-  if (isLoading) {
+  if (isLoading || isRedirecting) {
     return (
       <main className="h-screen bg-gradient-to-br from-dark-blue to-light-blue">
         <div className="flex flex-col items-center py-[40vh] align-middle">
@@ -134,7 +142,7 @@ export default function SubmitYourStress() {
           <Form.Root
             className="flex w-full flex-col"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={(e) => void handleSubmit(e)}
           >
             <Form.Field name="stressInput">
               <Form.Control asChild>
