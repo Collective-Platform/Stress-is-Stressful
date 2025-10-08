@@ -142,8 +142,8 @@ export default function ClientSideContent({
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-dark-blue to-light-blue p-8">
-      <div className="md:flex md:rounded-3xl md:bg-oren-1 lg:w-[80%]">
+    <main className="flex min-h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-br from-dark-blue to-light-blue p-4 md:p-8">
+      <div className="w-full md:flex md:rounded-3xl md:bg-oren-1 lg:w-[80%]">
         <div className="self-center rounded-t-3xl bg-oren-1 p-6 md:w-[50%]">
           <h1 className="mb-4 text-[24px] font-bold text-dark-blue mb:text-[32px] lg:text-[44px]">
             You Are Not Alone
@@ -160,7 +160,7 @@ export default function ClientSideContent({
             </a>
           </div>
         </div>
-        <div className="rounded-b-3xl bg-white p-6 text-dark-blue shadow-lg md:m-2 md:h-[90vh] md:w-[50%] md:overflow-y-auto md:rounded-3xl md:bg-white md:p-5 md:text-dark-blue">
+        <div className="overflow-y-auto overflow-x-hidden rounded-b-3xl bg-white p-6 text-dark-blue shadow-lg md:m-2 md:h-[90vh] md:w-[50%] md:rounded-3xl md:p-5">
           {submissions.length === 0 ? (
             <p className="text-center text-gray-500">
               No submissions yet. Share your thoughts to appear here!
@@ -172,9 +172,11 @@ export default function ClientSideContent({
                   className="border-b border-gray-200 pb-2"
                   key={submission.id}
                 >
-                  <p className="text-xs font-medium">{submission.stress}</p>
+                  <p className="text-wrap text-xs font-medium">
+                    {submission.stress}
+                  </p>
                   <div className="mt-1 flex items-center justify-between">
-                    <p className="mt-1 text-[8px] text-gray-500">
+                    <p className="mt-1 text-wrap text-[8px] text-gray-500">
                       {submission.name}
                     </p>
                     <button

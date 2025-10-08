@@ -89,7 +89,7 @@ export default function PopUp({ aiResponse }: { aiResponse: null | string }) {
     <>
       {popup ? (
         <div
-          className="absolute flex h-full w-full items-center justify-center backdrop-blur-sm backdrop-brightness-50"
+          className="fixed flex h-full w-full items-center justify-center backdrop-blur-sm backdrop-brightness-50"
           onClick={() => {
             setPopup(false)
             setOpened(false)
@@ -104,23 +104,25 @@ export default function PopUp({ aiResponse }: { aiResponse: null | string }) {
             <div className="flex h-screen items-center justify-center bg-gradient-to-br px-6">
               {opened ? (
                 <div
-                  className="items-left relative flex h-[600px] w-[450px] flex-col justify-center"
+                  className="items-left relative flex h-[400px] w-[300px] flex-col justify-center sm:h-[500px] sm:w-[400px]"
                   ref={letterWrapperRef}
                 >
                   <Image
                     alt="Letter"
-                    className="h-full w-full object-contain"
+                    className="object-contain"
                     fill={true}
+                    loading="eager"
+                    priority={true}
                     src="/images/letter.png"
                     style={{ objectFit: 'contain' }}
                   />
-                  <div className="absolute inset-0 flex flex-col items-center justify-between gap-10 overflow-y-auto text-left mb:mx-10 mb:my-[120px] ip:mx-14 ip:my-20 sm:mx-16 sm:my-14">
-                    <p className="max-h-min text-sm text-gray-800">
+                  <div className="absolute inset-0 flex flex-col items-center justify-between gap-10 overflow-y-auto p-9 text-left sm:px-16 sm:py-12">
+                    <p className="max-h-min text-xs text-gray-800">
                       &quot;
                       {aiResponse ?? "There's no message to display right now."}
                       &quot;
                     </p>
-                    <div className="flex w-full flex-col items-center">
+                    <div className="flex w-full flex-col items-center gap-4">
                       <a
                         className="hover:bg-dark-e flex w-full content-center items-center justify-center gap-2 rounded-xl border-2 border-solid border-dark-blue bg-oren-3 p-2 text-center text-xs text-dark-blue hover:text-oren-1"
                         href="https://ig.me/m/strictlystudents?text=Hey%20can%20i%20know%20who%20u%20are"
@@ -128,13 +130,13 @@ export default function PopUp({ aiResponse }: { aiResponse: null | string }) {
                         I want to talk to someone <SendHorizontal />
                       </a>
                       <button
-                        className="cursor-pointer w-full content-center justify-center rounded-2xl p-4 text-center text-xs text-oren-3 hover:text-dark-blue"
+                        className="cursor-pointer w-full content-center justify-center rounded-2xl text-center text-xs text-oren-3 hover:text-dark-blue"
                         onClick={() => {
                           setPopup(false)
                           setOpened(false)
                         }}
                       >
-                        See what others are going through
+                        Maybe later
                       </button>
                     </div>
                   </div>
@@ -146,6 +148,10 @@ export default function PopUp({ aiResponse }: { aiResponse: null | string }) {
                     className="h-auto w-60"
                     height={600}
                     onClick={() => {
+                      const el = largeEnvelopeRef.current
+                      if (el) {
+                        gsap.set(el, { clearProps: 'transform' }) // removes y and scale
+                      }
                       setOpened(true)
                     }}
                     onMouseEnter={handleEnvelopeMouseEnter}
