@@ -127,7 +127,7 @@ export default function PopUp({ aiResponse }: { aiResponse: null | string }) {
                         className="hover:bg-dark-e flex w-full content-center items-center justify-center gap-2 rounded-xl border-2 border-solid border-dark-blue bg-oren-3 p-2 text-center text-xs text-dark-blue hover:text-oren-1"
                         href="https://ig.me/m/strictlystudents"
                       >
-                        I want to talk to someone <SendHorizontal />
+                        I&apos;d like to share <SendHorizontal />
                       </a>
                       <button
                         className="cursor-pointer w-full content-center justify-center rounded-2xl text-center text-xs text-oren-3 hover:text-dark-blue"
