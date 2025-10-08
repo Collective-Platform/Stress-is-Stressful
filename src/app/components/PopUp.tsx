@@ -189,6 +189,20 @@ export default function PopUp({ aiResponse }: { aiResponse: null | string }) {
           </div>
         </>
       )}
+      <Image
+        alt="Preload letter"
+        height={1}
+        priority
+        src="/images/letter.png"
+        style={{
+          height: 1,
+          opacity: 0,
+          pointerEvents: 'none',
+          position: 'absolute',
+          width: 1,
+        }}
+        width={1}
+      />
     </>
   )
 }
