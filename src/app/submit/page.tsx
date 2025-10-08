@@ -148,7 +148,7 @@ export default function SubmitYourStress() {
               <Form.Control asChild>
                 <textarea
                   className={cn(
-                    'block max-h-[256px] min-h-[128px] w-full resize-none overflow-y-auto text-wrap rounded-2xl bg-light-blue p-5 font-mono text-xs',
+                    'block max-h-[256px] min-h-[128px] w-full resize-none overflow-y-auto text-wrap rounded-2xl bg-light-blue p-5 font-mono text-xs drop-shadow-xl',
                     isInvalid &&
                       'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
                     'text-oren-1',
@@ -169,7 +169,7 @@ export default function SubmitYourStress() {
                 <Form.Control asChild>
                   <input
                     className={cn(
-                      `mt-2 h-5 w-full rounded-2xl bg-light-blue p-5 font-mono text-xs`,
+                      `mt-2 h-5 w-full rounded-2xl bg-light-blue p-5 font-mono text-xs drop-shadow-xl`,
                       isInvalid &&
                         'invalid:animate-shake invalid:border-[1px] invalid:border-oren-3 invalid:placeholder-oren-3',
                       'text-oren-1',
@@ -208,7 +208,7 @@ export default function SubmitYourStress() {
                 </Form.Label>
                 <Switch
                   checked={formData.isAnonymous}
-                  className="ml-2"
+                  className="ml-2 drop-shadow-xl"
                   id="anonymousSwitch"
                   onCheckedChange={handleSwitchChange}
                 />
@@ -217,7 +217,7 @@ export default function SubmitYourStress() {
 
             <Form.Submit asChild>
               <button
-                className="mt-5 w-full content-center justify-center rounded-2xl bg-light-blue p-4 text-xs text-oren-1 hover:bg-dark-blue"
+                className="mt-5 w-full content-center justify-center rounded-2xl bg-light-blue p-4 text-xs text-oren-1 drop-shadow-xl hover:bg-dark-blue"
                 type="submit"
               >
                 TOSS IT IN THE TRASH

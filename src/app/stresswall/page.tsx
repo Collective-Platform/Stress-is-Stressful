@@ -26,8 +26,8 @@ export default async function ContentPage() {
 
   return (
     <>
-      <ClientSideContent initialSubmissions={initialSubmissions} />
       <PopUpTrigger />
+      <ClientSideContent initialSubmissions={initialSubmissions} />
     </>
   )
 }
