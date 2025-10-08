@@ -87,6 +87,20 @@ export default function PopUp({ aiResponse }: { aiResponse: null | string }) {
 
   return (
     <>
+      <Image
+        alt="Preload letter"
+        height={1}
+        priority
+        src="/images/letter.png"
+        style={{
+          height: 1,
+          opacity: 0,
+          pointerEvents: 'none',
+          position: 'absolute',
+          width: 1,
+        }}
+        width={1}
+      />
       {popup ? (
         <div
           className="fixed flex h-full w-full items-center justify-center backdrop-blur-sm backdrop-brightness-50"
@@ -127,7 +141,7 @@ export default function PopUp({ aiResponse }: { aiResponse: null | string }) {
                         className="hover:bg-dark-e flex w-full content-center items-center justify-center gap-2 rounded-xl border-2 border-solid border-dark-blue bg-oren-3 p-2 text-center text-xs text-dark-blue hover:text-oren-1"
                         href="https://ig.me/m/strictlystudents"
                       >
-                        I&apos;d like to share <SendHorizontal />
+                        I&apos;m ready to talk <SendHorizontal />
                       </a>
                       <button
                         className="cursor-pointer w-full content-center justify-center rounded-2xl text-center text-xs text-oren-3 hover:text-dark-blue"
@@ -189,20 +203,6 @@ export default function PopUp({ aiResponse }: { aiResponse: null | string }) {
           </div>
         </>
       )}
-      <Image
-        alt="Preload letter"
-        height={1}
-        priority
-        src="/images/letter.png"
-        style={{
-          height: 1,
-          opacity: 0,
-          pointerEvents: 'none',
-          position: 'absolute',
-          width: 1,
-        }}
-        width={1}
-      />
     </>
   )
 }

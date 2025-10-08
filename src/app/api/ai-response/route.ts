@@ -38,8 +38,6 @@ export async function GET(req: NextRequest) {
 
       So you are the intermediate step between the user and a human listener. You want to make the user feel heard and understood, and encourage them to open up more.
 
-      If the user has not shared any relevant stress, respond with: "Hey, I'm here for you if you want to share more about what's been going on."
-
       The response should:
       1. Start with a friendly greeting.
       2. Be warm and non-judgmental.
@@ -48,7 +46,7 @@ export async function GET(req: NextRequest) {
       5. Sound like a genuine, compassionate message from a supportive listener.
       6. The final output should be suitable to appear next to a "I want to talk to someone" button.
 
-      Example Output: "Hey, I'm here for you if you want to share more about what's been going on."`,
+      Example Output: "Hey, we're here for you if you want to share more about what's been going on."`,
     })
 
     console.log('AI response:', response.text)
