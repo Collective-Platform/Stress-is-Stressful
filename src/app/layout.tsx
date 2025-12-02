@@ -72,6 +72,7 @@ export default async function RootLayout({
         strategy="afterInteractive"
       /> */}
       <GoogleTagManager gtmId="GTM-MW9M4Z3F" />
+      <GoogleTagManager gtmId="GTM-MRBMSSHZ" />
       <body className={cn(pressstart2p.className, 'flex min-h-full flex-col')}>
         {children}
         <Presence initialLocation={initialLocation} />
