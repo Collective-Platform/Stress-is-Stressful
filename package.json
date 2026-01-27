@@ -30,7 +30,6 @@
     "react": "19.0.0-rc-5c56b873-20241107",
     "react-dom": "19.0.0-rc-5c56b873-20241107",
     "react-draggable": "^4.4.6",
-    "react-snowfall": "^2.4.0",
     "stress-is-stressful": "link:",
     "supabase": "^2.33.9",
     "tailwind-merge": "^2.5.4",
