@@ -73,9 +73,6 @@ importers:
       react-draggable:
         specifier: ^4.4.6
         version: 4.4.6(react-dom@19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107))(react@19.0.0-rc-5c56b873-20241107)
-      react-snowfall:
-        specifier: ^2.4.0
-        version: 2.4.0(react-dom@19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107))(react@19.0.0-rc-5c56b873-20241107)
       stress-is-stressful:
         specifier: 'link:'
         version: 'link:'
@@ -2422,17 +2419,8 @@ packages:
       react: '>= 16.3.0'
       react-dom: '>= 16.3.0'
 
-  react-fast-compare@3.2.2:
-    resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
-
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
-
-  react-snowfall@2.4.0:
-    resolution: {integrity: sha512-KAPMiGnxt11PEgC2pTVrTQsvk5jt1kLUtG+ZamiKLphTZ7GiYT1Aa5kX6jp4jKWq1kqJHchnGT9CDm4g86A5Gg==}
-    peerDependencies:
-      react: "^16.8 ||\_17.x || 18.x || 19.x"
-      react-dom: ^16.8 || 17.x || 18.x || 19.x
 
   react@19.0.0-rc-5c56b873-20241107:
     resolution: {integrity: sha512-cFT1p+jDiT5MSDCOAlllNC9cN6532458CNGZMw+8u33ffZuX3yf2XJtSwar/G9t47nEmqsurdvtIjqb603735g==}
@@ -5139,15 +5127,7 @@ snapshots:
       react: 19.0.0-rc-5c56b873-20241107
       react-dom: 19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107)
 
-  react-fast-compare@3.2.2: {}
-
   react-is@16.13.1: {}
-
-  react-snowfall@2.4.0(react-dom@19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107))(react@19.0.0-rc-5c56b873-20241107):
-    dependencies:
-      react: 19.0.0-rc-5c56b873-20241107
-      react-dom: 19.0.0-rc-5c56b873-20241107(react@19.0.0-rc-5c56b873-20241107)
-      react-fast-compare: 3.2.2
 
   react@19.0.0-rc-5c56b873-20241107: {}
 
